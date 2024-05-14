@@ -17,3 +17,9 @@ local.properties
 # Project exclude paths
 /app/
 /gradle/
+
+# Exclude Firebase Config File
+/app/google-services.json
+
+# Exclude Gemini file
+.aiexclude
