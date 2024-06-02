@@ -11,7 +11,7 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        minSdk= 28
+        minSdk= 24
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -71,7 +71,8 @@ dependencies {
 
     // Firebase
     implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.cloud.firestore.ktx)
+    implementation(libs.firebase.cloud.firestore)
+    implementation(libs.firebase.auth)
 
     // Hilt
     implementation(libs.androidx.hilt.navigation)

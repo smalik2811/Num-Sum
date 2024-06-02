@@ -1,11 +1,9 @@
 package com.yangian.numsum.feature.temporary
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.firestore.SetOptions
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.yangian.numsum.core.data.repository.CallResourceRepository
 import com.yangian.numsum.core.datastore.UserPreferences
 import com.yangian.numsum.core.model.CallResource
@@ -24,6 +22,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TemporaryViewModel @Inject constructor(
+    private val firestore: FirebaseFirestore,
+    private val firebaseAuth: FirebaseAuth,
     private val userPreferences: UserPreferences,
     private val callResourcesRepository: CallResourceRepository,
 ) : ViewModel() {
@@ -47,21 +47,27 @@ class TemporaryViewModel @Inject constructor(
 
     fun uploadLogsToFirestore() {
         viewModelScope.launch(Dispatchers.IO) {
-            val db = Firebase.firestore
 
-            val callList: List<CallResource> = callResourcesRepository.getCalls().first()
-            val map = hashMapOf<String, List<CallResource>>()
-            map["Realme-Updated"] = callList
+            val currentUser = firebaseAuth.currentUser
+            val receiverId = userPreferences.getReceiverId().first()
+            val documentRef  = firestore.collection("call-logs").document(receiverId)
 
-            // Add a new document with a generated ID
-            db.collection("data")
-                .document("call-logs")
-                .set(map, SetOptions.merge())
-                .addOnSuccessListener {
-                    Log.d(TAG, "Document added.")
-                }
-                .addOnFailureListener { e ->
-                    Log.w(TAG, "Error adding document", e)
+            documentRef.get()
+                .addOnSuccessListener { documentSnapshot ->
+                    if (documentSnapshot.exists()) {
+                        val senderId = documentSnapshot.getString("sender_id")
+                        val existingLogsArray = documentSnapshot.get("logs_array")
+
+                        if (currentUser != null) {
+                            if (senderId == currentUser.uid && existingLogsArray == null) {
+                                viewModelScope.launch(Dispatchers.IO) {
+                                    val callList: List<CallResource> = callResourcesRepository.getCalls().first()
+
+                                    documentRef.update("logs-array", callList)
+                                }
+                            }
+                        }
+                    }
                 }
         }
     }

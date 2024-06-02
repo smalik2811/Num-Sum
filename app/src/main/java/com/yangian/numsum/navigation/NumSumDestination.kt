@@ -9,4 +9,7 @@ sealed class NumSumDestination(
     data object Temporary: NumSumDestination(
         route = "temporary"
     )
+    data object OnBoard: NumSumDestination(
+        route = "onBoard"
+    )
 }

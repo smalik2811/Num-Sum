@@ -21,6 +21,7 @@
             <option value="$PROJECT_DIR$/core/ui" />
             <option value="$PROJECT_DIR$/feature" />
             <option value="$PROJECT_DIR$/feature/calculator" />
+            <option value="$PROJECT_DIR$/feature/onboard" />
             <option value="$PROJECT_DIR$/feature/temporary" />
           </set>
         </option>

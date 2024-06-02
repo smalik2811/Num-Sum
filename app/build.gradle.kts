@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.yangian.numsum"
-        minSdk= 28
+        minSdk= 24
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -68,11 +68,11 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.material3.window.size)
 
-    // Firebase Bom, Analytics, Authentication, Database
-//    implementation(platform(libs.firebase.bom))
-//    implementation(libs.firebase.analytics)
-//    implementation(libs.firebase.auth)
-//    implementation(libs.firebase.database)
+    // Splash API
+    implementation(libs.androidx.core.splashscreen)
+
+    // Hilt
+    implementation(libs.androidx.hilt.navigation)
 
     // Dagger Hilt
     implementation(libs.dagger.hilt.android)
@@ -98,4 +98,6 @@ dependencies {
     implementation(project(":feature:calculator"))
     implementation(project(":feature:temporary"))
     implementation(project(":core:designsystem"))
+    implementation(project(":feature:onboard"))
+    implementation(project(":core:datastore"))
 }

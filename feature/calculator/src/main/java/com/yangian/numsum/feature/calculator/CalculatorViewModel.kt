@@ -1,13 +1,22 @@
 package com.yangian.numsum.feature.calculator
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.yangian.numsum.feature.calculator.exprk.Expressions
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class CalculatorViewModel : ViewModel() {
+
+@HiltViewModel
+class CalculatorViewModel @Inject constructor(
+
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CalculatorUiState())
     val uiState: StateFlow<CalculatorUiState> = _uiState.asStateFlow()
@@ -165,18 +174,48 @@ class CalculatorViewModel : ViewModel() {
     }
 
     fun prepareResult() {
-        _uiState.update { currentState ->
-            currentState.copy(
-                expression = currentState.result,
-                length = currentState.result.length,
-                result = ""
-            )
+        if (_uiState.value.expression.isEmpty()) {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    expression = "=",
+                    length = 1,
+                    result = ""
+                )
+            }
+        } else if (_uiState.value.expression.first() == '=') {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    expression = currentState.expression + "=",
+                    length = currentState.length.inc(),
+                    result = ""
+                )
+            }
+            if (_uiState.value.expression == "=18568") {
+                println("App unlocked!!!")
+            }
+
+            viewModelScope.launch {
+                delay(500)
+                clearCalculator()
+            }
+
+        } else {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    expression = currentState.result,
+                    length = currentState.result.length,
+                    result = ""
+                )
+            }
         }
     }
+
     fun evaluateExpressionCompact() {
         _uiState.update { currentState ->
             currentState.copy(
-                result = Expressions().eval(currentState.expression.replace("×", "*").replace("÷", "/")),
+                result = Expressions().eval(
+                    currentState.expression.replace("×", "*").replace("÷", "/")
+                ),
             )
         }
     }
@@ -184,7 +223,9 @@ class CalculatorViewModel : ViewModel() {
     fun evaluateExpressionExpanded() {
         _uiState.update { currentState ->
             currentState.copy(
-                expression = Expressions().eval(currentState.expression.replace("×", "*").replace("÷", "/")),
+                expression = Expressions().eval(
+                    currentState.expression.replace("×", "*").replace("÷", "/")
+                ),
                 length = currentState.result.length
             )
         }
@@ -193,7 +234,9 @@ class CalculatorViewModel : ViewModel() {
     fun evaluateExpressionMedium() {
         _uiState.update { currentState ->
             currentState.copy(
-                expression = Expressions().eval(currentState.expression.replace("×", "*").replace("÷", "/")),
+                expression = Expressions().eval(
+                    currentState.expression.replace("×", "*").replace("÷", "/")
+                ),
                 length = currentState.result.length
             )
         }

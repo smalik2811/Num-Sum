@@ -2,12 +2,13 @@ package com.yangian.numsum.core.datastore
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.yangian.numsum.core.constant.Constant.LAST_CALL_ID
+import com.yangian.numsum.core.constant.Constant.ONBOARDING_DONE
 import com.yangian.numsum.core.constant.Constant.RECEIVER_ID
-import com.yangian.numsum.core.constant.Constant.SENDER_ID
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -22,7 +23,7 @@ class UserPreferences @Inject constructor(
     companion object {
         val LAST_CALL_ID_KEY = longPreferencesKey(LAST_CALL_ID)
         val RECEIVER_ID_KEY = stringPreferencesKey(RECEIVER_ID)
-        val SENDER_ID_KEY = stringPreferencesKey(SENDER_ID)
+        val ONBOARDING_DONE_KEY = booleanPreferencesKey(ONBOARDING_DONE)
     }
 
     fun getLastCallId(): Flow<Long> {
@@ -37,9 +38,9 @@ class UserPreferences @Inject constructor(
         }
     }
 
-    fun getSenderId(): Flow<String> {
+    fun getOnboardingDone(): Flow<Boolean> {
         return dataStore.data.map {
-            it[SENDER_ID_KEY] ?: ""
+            it[ONBOARDING_DONE_KEY] ?: false
         }
     }
 
@@ -53,22 +54,22 @@ class UserPreferences @Inject constructor(
         }
     }
 
-    suspend fun updateSenderId(
-        newSenderId: String
-    ) {
-        withContext(Dispatchers.IO) {
-            dataStore.edit {
-                it[SENDER_ID_KEY] = newSenderId
-            }
-        }
-    }
-
     suspend fun setReceiverId(
         newReceiverId: String
     ) {
         withContext(Dispatchers.IO) {
             dataStore.edit {
                 it[RECEIVER_ID_KEY] = newReceiverId
+            }
+        }
+    }
+
+    suspend fun setOnboardingDone(
+        newOnboardingDone: Boolean
+    ) {
+        withContext(Dispatchers.IO) {
+            dataStore.edit {
+                it[ONBOARDING_DONE_KEY] = newOnboardingDone
             }
         }
     }

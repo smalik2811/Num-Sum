@@ -97,9 +97,9 @@ val DarkColorScheme = darkColorScheme(
     surfaceContainerLowest = md_theme_dark_surfaceContainerLowest
 )
 
-val LightBackgroundTheme = BackgroundTheme(color = md_theme_light_inverseOnSurface)
+val LightBackgroundTheme = BackgroundTheme(color = md_theme_light_background)
 
-val DarkBackgroundTheme = BackgroundTheme(color = md_theme_dark_inverseOnSurface)
+val DarkBackgroundTheme = BackgroundTheme(color = md_theme_dark_background)
 
 @Composable
 fun NumSumAppTheme(
@@ -137,9 +137,12 @@ fun NumSumAppTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.surfaceContainerLow.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars =
-                !useDarkTheme
+            val insetsController = WindowCompat.getInsetsController(window, view)
+            window.statusBarColor = colorScheme.background.toArgb()
+            window.navigationBarColor = colorScheme.background.toArgb()
+            window.navigationBarDividerColor = colorScheme.background.toArgb()
+            insetsController.isAppearanceLightStatusBars = !useDarkTheme
+            insetsController.isAppearanceLightNavigationBars = !useDarkTheme
         }
     }
 

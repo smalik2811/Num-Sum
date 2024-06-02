@@ -74,46 +74,14 @@ fun TemporaryRoute(
 
         if (isCallLogPermissionGranted) {
             // Permission is already granted, proceed with the call log retrieval
-            Text(
-                modifier = Modifier,
-                text = "Permission already Granted",
-                style = MaterialTheme.typography.headlineLarge,
-                textAlign = TextAlign.Start,
-            )
-        } else {
-            // Permission is not granted, request it
-            Button(
-                onClick = {
-                    ActivityCompat.requestPermissions(
-                        localContext as Activity,
-                        arrayOf(Manifest.permission.READ_CALL_LOG),
-                        1
-                    )
-
-                    isCallLogPermissionGranted = ContextCompat.checkSelfPermission(
-                        localContext,
-                        Manifest.permission.READ_CALL_LOG
-                    ) == PackageManager.PERMISSION_GRANTED
-                },
-                modifier = Modifier.wrapContentSize()
-
+            Row(
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Text(
-                    modifier = Modifier,
-                    text = "Request Permission",
-                    textAlign = TextAlign.Start,
-                )
-            }
-        }
+                // Add call records to the database
+                Button(
+                    onClick = {
 
-        Row(
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            // Add call records to the database
-            Button(
-                onClick = {
-                    if (isCallLogPermissionGranted) {
 
                         val idColumn = CallLog.Calls._ID
                         val nameColumn = CallLog.Calls.CACHED_NAME
@@ -173,31 +141,56 @@ fun TemporaryRoute(
                                 temporaryViewModel.updateLastCallId(newLastCallId)
                             }
                         }
-                    }
-                }
-            ) {
-                Text("Show Logs")
-            }
 
+                    }
+                ) {
+                    Text("Show Logs")
+                }
+
+                Button(
+                    onClick = {
+                        temporaryViewModel.uploadLogsToFirestore()
+                    }
+                ) {
+                    Text("Upload Logs")
+                }
+            }
+            // Display call records
+            Box(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                LazyColumn(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    callFeed(
+                        feedState = feedState,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            }
+        } else {
+            // Permission is not granted, request it
             Button(
                 onClick = {
-                    temporaryViewModel.uploadLogsToFirestore()
-                }
+                    ActivityCompat.requestPermissions(
+                        localContext as Activity,
+                        arrayOf(Manifest.permission.READ_CALL_LOG),
+                        1
+                    )
+
+                    isCallLogPermissionGranted = ContextCompat.checkSelfPermission(
+                        localContext,
+                        Manifest.permission.READ_CALL_LOG
+                    ) == PackageManager.PERMISSION_GRANTED
+                },
+                modifier = Modifier.wrapContentSize()
+
             ) {
-                Text("Upload Logs")
-            }
-        }
-        // Display call records
-        Box(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            LazyColumn(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                callFeed(
-                    feedState = feedState,
-                    modifier = Modifier.fillMaxWidth()
+                Text(
+                    modifier = Modifier,
+                    text = "Request Permission",
+                    textAlign = TextAlign.Start,
                 )
             }
         }

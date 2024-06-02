@@ -22,7 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.yangian.numsum.core.designsystem.component.CalculatorButton
 import com.yangian.numsum.core.designsystem.component.CalculatorIconButton
 import com.yangian.numsum.core.designsystem.icon.BackspaceIcon
@@ -31,7 +31,7 @@ import com.yangian.numsum.feature.calculator.CalculatorViewModel
 
 @Composable
 fun CalculatorRouteCompact(
-    calculatorViewModel: CalculatorViewModel = viewModel()
+    calculatorViewModel: CalculatorViewModel = hiltViewModel()
 ) {
 
     val calculatorUiState by calculatorViewModel.uiState.collectAsState()
@@ -39,6 +39,9 @@ fun CalculatorRouteCompact(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(
+                color = MaterialTheme.colorScheme.background,
+            )
             .padding(12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -430,7 +433,7 @@ fun CalculatorRouteCompact(
 }
 
 @Preview(
-    device = "spec:id=reference_phone,shape=Normal,width=411,height=891,unit=dp,dpi=420",
+    device = "spec:width=393dp,height=852dp",
     showSystemUi = true,
     apiLevel = 33
 )

@@ -3,31 +3,38 @@ package com.yangian.numsum
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.getValue
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.yangian.numsum.core.designsystem.component.NumSumAppBackground
 import com.yangian.numsum.core.designsystem.theme.NumSumAppTheme
 import com.yangian.numsum.ui.NumSumApp
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    @Inject
+    lateinit var mainViewModel: MainViewModel
+
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        installSplashScreen().setKeepOnScreenCondition {
+            !mainViewModel.isSplashVisible.value
+        }
+
+
         setContent {
+            val startDestination by mainViewModel.startDestination
             NumSumAppTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
+                NumSumAppBackground {
                     NumSumApp(
-                        windowSizeClass = calculateWindowSizeClass(activity = this)
+                        windowSizeClass = calculateWindowSizeClass(activity = this),
+                        startDestination = startDestination
                     )
                 }
             }

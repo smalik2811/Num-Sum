@@ -6,6 +6,7 @@ object Constant {
     const val NUMSUM_PREFERENCES_DATASTORE = "numsum_preferences_datastore"
     const val LAST_CALL_ID = "last_call_id"
     const val RECEIVER_ID = "receiver_id"
+    const val ONBOARDING_DONE = "onboarding_done"
     const val SENDER_ID = "sender_id"
     const val FIRESTORE_CALL_COLLECTION_NAME = "call-logs"
 
