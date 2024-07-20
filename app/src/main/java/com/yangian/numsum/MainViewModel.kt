@@ -16,18 +16,19 @@ class MainViewModel @Inject constructor(
     private val _isSplashVisible: MutableState<Boolean> = mutableStateOf(true)
     val isSplashVisible: MutableState<Boolean> = _isSplashVisible
 
-    private val _startDestination: MutableState<String> = mutableStateOf(NumSumDestination.OnBoard.route)
-    val startDestination: State<String> = _startDestination
+    private val _startDestination: MutableState<NumSumDestination> = mutableStateOf(NumSumDestination.OnBoard)
+    val startDestination: State<NumSumDestination> = _startDestination
 
     init {
         viewModelScope.launch {
             userPreferences.getOnboardingDone().collect() { completed ->
                 if (completed) {
-                    _startDestination.value = NumSumDestination.Temporary.route
+                    _startDestination.value = NumSumDestination.Temporary
                 } else {
-                    _startDestination.value = NumSumDestination.OnBoard.route
+                    _startDestination.value = NumSumDestination.OnBoard
                 }
             }
+            _isSplashVisible.value = false
         }
     }
 }

@@ -11,7 +11,7 @@ data class CallResource(
     val type: Int,
 )
 
-fun CallResource.getDateString(): String {
+fun CallResource.getDateTimeString(): String {
     val calendarInstance = Calendar.getInstance()
     calendarInstance.timeInMillis = timestamp
 
@@ -30,9 +30,23 @@ fun CallResource.getDateString(): String {
         11 -> "Dec"
         else -> ""
     }
+
+    val meridian = when(calendarInstance.get(Calendar.AM_PM)) {
+        0 -> "AM"
+        1 -> "PM"
+        else -> ""
+    }
+
+    val hour = when(calendarInstance.get(Calendar.HOUR)) {
+        0 -> "12"
+        else -> calendarInstance.get(Calendar.HOUR).toString().padStart(2, '0')
+    }
     return "$monthName " +
             "${calendarInstance.get(Calendar.DAY_OF_MONTH)}, " +
-            "${calendarInstance.get(Calendar.YEAR)}"
+            "${calendarInstance.get(Calendar.YEAR)} • " +
+            "$hour:" +
+            "${calendarInstance.get(Calendar.MINUTE).toString().padStart(2, '0')} " +
+            meridian
 }
 
 fun CallResource.getDurationString(): String {

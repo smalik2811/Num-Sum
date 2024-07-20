@@ -31,7 +31,8 @@ import com.yangian.numsum.feature.calculator.CalculatorViewModel
 
 @Composable
 fun CalculatorRouteExpanded(
-   calculatorViewModel: CalculatorViewModel = hiltViewModel()
+    calculatorViewModel: CalculatorViewModel = hiltViewModel(),
+    navigateToLockedScreen: () -> Unit,
 ) {
 
     val calculatorUiState by calculatorViewModel.uiState.collectAsState()
@@ -418,16 +419,25 @@ fun CalculatorRouteExpanded(
                 onClick = {
                     calculatorViewModel.evaluateExpressionCompact()
                     calculatorViewModel.prepareResult()
+                    if (calculatorUiState.appUnlocked) {
+                        navigateToLockedScreen()
+                    }
                 }
             )
         }
     }
 }
 
-@Preview(device = "spec:id=reference_desktop,shape=Normal,width=1920,height=1080,unit=dp,dpi=160", showSystemUi = true, apiLevel = 33)
+@Preview(
+    device = "spec:id=reference_desktop,shape=Normal,width=1920,height=1080,unit=dp,dpi=160",
+    showSystemUi = true,
+    apiLevel = 33
+)
 @Composable
 private fun CalculatorRouteExpandedPreview() {
     NumSumAppTheme {
-        CalculatorRouteExpanded()
+        CalculatorRouteExpanded(
+            navigateToLockedScreen = {}
+        )
     }
 }

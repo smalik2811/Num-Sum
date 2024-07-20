@@ -10,20 +10,27 @@ import com.yangian.numsum.feature.calculator.ui.CalculatorRouteMedium
 
 const val CALCULATOR_ROUTE = "calculator"
 fun NavGraphBuilder.calculatorScreen(
+    navigateToLockedScreen : () -> Unit,
     windowSizeClass: WindowSizeClass
 ) {
     composable(route = CALCULATOR_ROUTE) {
         when(windowSizeClass.widthSizeClass) {
             WindowWidthSizeClass.Compact -> {
-                CalculatorRouteCompact()
+                CalculatorRouteCompact(
+                    navigateToLockedScreen = navigateToLockedScreen
+                )
             }
 
             WindowWidthSizeClass.Medium -> {
-                CalculatorRouteMedium()
+                CalculatorRouteMedium(
+                    navigateToLockedScreen = navigateToLockedScreen
+                )
             }
 
             WindowWidthSizeClass.Expanded -> {
-                CalculatorRouteExpanded()
+                CalculatorRouteExpanded(
+                    navigateToLockedScreen = navigateToLockedScreen
+                )
             }
         }
     }

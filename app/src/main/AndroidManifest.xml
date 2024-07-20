@@ -17,10 +17,6 @@
         android:theme="@style/Theme.NumSum"
         tools:targetApi="34">
 
-        <meta-data
-            android:name="com.google.mlkit.vision.DEPENDENCIES"
-            android:value="barcode_ui"/>
-
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -32,9 +28,14 @@
             </intent-filter>
         </activity>
 
+        <provider
+            android:name = "androidx.startup.InitializationProvider"
+            android:authorities = "${applicationId}.androidx-startup"
+            tools:node = "remove" />
+
         <meta-data
             android:name="com.google.mlkit.vision.DEPENDENCIES"
-            android:value="barcode_ui"/>
+            android:value="barcode_ui" />
 
     </application>
 

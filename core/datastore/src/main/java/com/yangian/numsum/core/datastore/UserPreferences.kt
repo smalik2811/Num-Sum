@@ -28,7 +28,7 @@ class UserPreferences @Inject constructor(
 
     fun getLastCallId(): Flow<Long> {
         return dataStore.data.map {
-            it[LAST_CALL_ID_KEY] ?: 0
+            it[LAST_CALL_ID_KEY] ?: -1
         }
     }
 

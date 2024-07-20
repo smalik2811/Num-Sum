@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.yangian.numsum"
-        minSdk= 24
+        minSdk= 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -78,8 +78,16 @@ dependencies {
     implementation(libs.dagger.hilt.android)
     kapt(libs.dagger.hilt.compiler)
 
+    // Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.cloud.firestore)
+    implementation(libs.firebase.auth)
+
     // Navigation
     implementation(libs.androidx.navigation.compose)
+
+    // Work Manager
+    implementation(libs.androidx.work.runtime)
 
     // Test Dependencies
     testImplementation(libs.junit)
@@ -100,4 +108,6 @@ dependencies {
     implementation(project(":core:designsystem"))
     implementation(project(":feature:onboard"))
     implementation(project(":core:datastore"))
+    implementation(project(":core:workmanager"))
+    implementation(project(":core:data"))
 }

@@ -34,6 +34,7 @@ class MainActivity : ComponentActivity() {
                 NumSumAppBackground {
                     NumSumApp(
                         windowSizeClass = calculateWindowSizeClass(activity = this),
+                        appContext = applicationContext,
                         startDestination = startDestination
                     )
                 }

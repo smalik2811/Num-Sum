@@ -10,14 +10,16 @@ import com.yangian.numsum.core.model.CallResource
 import com.yangian.numsum.core.ui.CallFeedUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.invoke
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,8 +30,16 @@ class TemporaryViewModel @Inject constructor(
     private val callResourcesRepository: CallResourceRepository,
 ) : ViewModel() {
 
-    val lastCallId: Flow<Long> = userPreferences.getLastCallId()
-    val TAG = "Firebase"
+    private val _lastCallId = MutableStateFlow(-1L)
+    val lastCallId: StateFlow<Long> = _lastCallId.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            userPreferences.getLastCallId().collect { newLastCallId ->
+                _lastCallId.value = newLastCallId
+            }
+        }
+    }
 
     fun updateLastCallId(newLastCallId: Long) {
         viewModelScope.launch {
@@ -47,28 +57,34 @@ class TemporaryViewModel @Inject constructor(
 
     fun uploadLogsToFirestore() {
         viewModelScope.launch(Dispatchers.IO) {
+            val callList = callResourcesRepository.getCalls().first()
 
+            // Retrieve receiver ID and document reference
             val currentUser = firebaseAuth.currentUser
             val receiverId = userPreferences.getReceiverId().first()
-            val documentRef  = firestore.collection("call-logs").document(receiverId)
+            val documentRef = firestore.collection("logs").document(receiverId)
 
-            documentRef.get()
-                .addOnSuccessListener { documentSnapshot ->
-                    if (documentSnapshot.exists()) {
-                        val senderId = documentSnapshot.getString("sender_id")
-                        val existingLogsArray = documentSnapshot.get("logs_array")
+            // Update the Firestore document
+            if (currentUser != null && callList.isNotEmpty()) {
+                // 4.1. Get document data
+                val documentSnapshot = documentRef.get().await()
 
-                        if (currentUser != null) {
-                            if (senderId == currentUser.uid && existingLogsArray == null) {
-                                viewModelScope.launch(Dispatchers.IO) {
-                                    val callList: List<CallResource> = callResourcesRepository.getCalls().first()
+                // 4.2. Check for existing logs and sender ID
+                if (documentSnapshot.exists()) {
+                    val senderId = documentSnapshot.getString("sender")
+                    val ready = documentSnapshot.get("ready") as Boolean
 
-                                    documentRef.update("logs-array", callList)
-                                }
-                            }
-                        }
+                    if (senderId == currentUser.uid && !ready) {
+                        // 4.3. Update the document with logs
+                        documentRef.set(
+                            mapOf(
+                                "array" to callList,
+                                "ready" to true
+                            )
+                        )
                     }
                 }
+            }
         }
     }
 

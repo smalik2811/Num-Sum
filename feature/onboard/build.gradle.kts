@@ -10,7 +10,7 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        minSdk = 24
+        minSdk = 26
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -78,9 +78,12 @@ dependencies {
     // QRGenerator
     implementation(libs.qrcode.kotlin)
 
-//     Google Play Services
-    implementation(libs.play.services.code.scanner)
+    // Google Play Services
+    implementation(libs.play.services.code.scaner)
     implementation(libs.play.services.base)
+
+    // Work Manager
+    implementation(libs.androidx.work.runtime)
 
     // Test Dependencies
     testImplementation(libs.junit)
@@ -93,4 +96,5 @@ dependencies {
     implementation(project(":core:designsystem"))
     implementation(project(":core:firebase"))
     implementation(project(":core:datastore"))
+    implementation(project(":core:workmanager"))
 }

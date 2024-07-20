@@ -78,11 +78,13 @@ fun TemporaryRoute(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 modifier = Modifier.fillMaxWidth()
             ) {
+
+                Text(
+                    text = "$lastCallId"
+                )
                 // Add call records to the database
                 Button(
                     onClick = {
-
-
                         val idColumn = CallLog.Calls._ID
                         val nameColumn = CallLog.Calls.CACHED_NAME
                         val numberColumn = CallLog.Calls.NUMBER

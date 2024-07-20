@@ -32,7 +32,7 @@ import com.yangian.numsum.core.designsystem.theme.NumSumAppTheme
 import com.yangian.numsum.core.designsystem.theme.extendedDark
 import com.yangian.numsum.core.designsystem.theme.extendedLight
 import com.yangian.numsum.core.model.CallResource
-import com.yangian.numsum.core.model.getDateString
+import com.yangian.numsum.core.model.getDateTimeString
 import com.yangian.numsum.core.model.getDurationString
 import java.util.Locale
 
@@ -137,7 +137,7 @@ fun CallResourceListItem(
                 )
 
                 Text(
-                    text = callResource.getDateString(),
+                    text = callResource.getDateTimeString(),
                     style = MaterialTheme.typography.bodySmall
                 )
             }

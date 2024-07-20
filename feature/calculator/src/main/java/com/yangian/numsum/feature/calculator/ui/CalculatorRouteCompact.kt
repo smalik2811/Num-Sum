@@ -31,10 +31,15 @@ import com.yangian.numsum.feature.calculator.CalculatorViewModel
 
 @Composable
 fun CalculatorRouteCompact(
-    calculatorViewModel: CalculatorViewModel = hiltViewModel()
+    calculatorViewModel: CalculatorViewModel = hiltViewModel(),
+    navigateToLockedScreen: () -> Unit,
 ) {
 
     val calculatorUiState by calculatorViewModel.uiState.collectAsState()
+
+    if (calculatorUiState.appUnlocked) {
+        navigateToLockedScreen()
+    }
 
     Column(
         modifier = Modifier
@@ -440,6 +445,8 @@ fun CalculatorRouteCompact(
 @Composable
 private fun CalculatorRouteCompactPreview() {
     NumSumAppTheme {
-        CalculatorRouteCompact()
+        CalculatorRouteCompact(
+            navigateToLockedScreen = {}
+        )
     }
 }

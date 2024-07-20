@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface CallResourcesDao {
 
-    @Query("SELECT * FROM $CALL_TABLE_NAME ORDER BY id ASC")
+    @Query("SELECT * FROM $CALL_TABLE_NAME ORDER BY id DESC")
     fun getCalls(): Flow<List<NumSumCallEntity>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

@@ -1,5 +1,6 @@
 package com.yangian.numsum.feature.onboard.ui
 
+import android.content.Context
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.slideInHorizontally
@@ -24,6 +25,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -42,6 +44,7 @@ import com.yangian.numsum.feature.onboard.ui.onBoardScreens.WelcomeScreen
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OnBoardRoute(
+    appContext: Context,
     modifier: Modifier = Modifier,
     navigateToCalculator: () -> Unit = {},
     navigateToTemporary: () -> Unit = {},
@@ -91,6 +94,7 @@ fun OnBoardRoute(
 
             OnBoardingScreen(
                 onBoardViewModel = onBoardViewModel,
+                appContext = appContext,
                 navigateToCalculator = navigateToCalculator,
                 navigateToTemporary = navigateToTemporary,
                 modifier = Modifier
@@ -127,6 +131,7 @@ fun OnBoardRoute(
 @Composable
 fun OnBoardingScreen(
     onBoardViewModel: OnBoardViewModel,
+    appContext: Context,
     navigateToCalculator: () -> Unit = {},
     navigateToTemporary: () -> Unit = {},
     modifier: Modifier = Modifier
@@ -144,6 +149,7 @@ fun OnBoardingScreen(
         OnBoardingScreens.Connection1 -> ConnectionScreen1(onBoardViewModel, modifier)
         OnBoardingScreens.Connection2 -> ConnectionScreen2(
             onBoardViewModel,
+            appContext = appContext,
             modifier,
             navigateToTemporary
         )
@@ -156,6 +162,7 @@ private fun OnBoardPreview() {
     NumSumAppTheme {
         NumSumAppBackground {
             OnBoardRoute(
+                appContext = LocalContext.current,
                 modifier = Modifier.fillMaxSize()
             )
         }
