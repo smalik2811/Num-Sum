@@ -79,8 +79,7 @@ dependencies {
     implementation(libs.qrcode.kotlin)
 
     // Google Play Services
-    implementation(libs.play.services.code.scaner)
-    implementation(libs.play.services.base)
+    implementation(libs.mlkit.barcode.scanning)
 
     // Work Manager
     implementation(libs.androidx.work.runtime)

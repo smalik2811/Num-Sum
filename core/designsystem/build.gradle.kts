@@ -33,6 +33,7 @@ android {
     }
     buildFeatures {
         compose = true
+        viewBinding = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.13"
@@ -55,6 +56,13 @@ dependencies {
     implementation(libs.androidx.ui.tooling)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material.icons)
+
+    // Google Play Services
+    implementation(libs.mlkit.barcode.scanning)
+
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.view)
 
     // Test Dependencies
     testImplementation(libs.junit)

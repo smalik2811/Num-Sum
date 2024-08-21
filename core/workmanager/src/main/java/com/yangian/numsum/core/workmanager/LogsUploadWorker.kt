@@ -29,8 +29,8 @@ class LogsUploadWorker @AssistedInject constructor(
     @Assisted private val firebaseAuth: FirebaseAuth,
     @Assisted private val userPreferences: UserPreferences,
     @Assisted private val callResourcesRepository: CallResourceRepository,
-    context: Context,
-    workerParameters: WorkerParameters
+    @Assisted private val context: Context,
+    @Assisted workerParameters: WorkerParameters
 ) : CoroutineWorker(context, workerParameters) {
 
     private var lastCallId: Flow<Long> = userPreferences.getLastCallId()
@@ -39,9 +39,10 @@ class LogsUploadWorker @AssistedInject constructor(
     }
 
     override suspend fun doWork(): Result {
+
         return try {
             // 1. Fetch and store logs
-            storeLogsInLocalDatabase()
+            storeLogsInLocalDatabase(context)
 
             // 2. Get call list
             val callList = callResourcesRepository.getCalls().first()
@@ -80,11 +81,12 @@ class LogsUploadWorker @AssistedInject constructor(
             }
 
             println("Worker: Finished Properly. Time: ${System.currentTimeMillis()}")
+
             Result.success()
 
         } catch (e: Exception) {
             Log.e("LogsUpdateWorker", e.message.toString())
-            Result.failure()
+            Result.retry()
         }
     }
 
@@ -97,7 +99,9 @@ class LogsUploadWorker @AssistedInject constructor(
     }
 
 
-    private suspend fun storeLogsInLocalDatabase() {
+    private suspend fun storeLogsInLocalDatabase(
+        context: Context
+    ) {
 
         val idColumn = CallLog.Calls._ID
         val nameColumn = CallLog.Calls.CACHED_NAME
@@ -116,7 +120,7 @@ class LogsUploadWorker @AssistedInject constructor(
         )
 
         val listOfCallResource = mutableListOf<CallResource>()
-        val cursor = applicationContext.contentResolver.query(
+        val cursor = context.contentResolver.query(
             CallLog.Calls.CONTENT_URI,
             projection,
             "_id > ?",
@@ -152,5 +156,4 @@ class LogsUploadWorker @AssistedInject constructor(
 
         }
     }
-
 }

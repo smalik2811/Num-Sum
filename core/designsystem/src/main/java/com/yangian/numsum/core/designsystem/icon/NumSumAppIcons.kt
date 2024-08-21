@@ -6,7 +6,6 @@ import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.PhoneMissed
 import androidx.compose.material.icons.automirrored.rounded.CallMade
 import androidx.compose.material.icons.automirrored.rounded.CallMissed
-import androidx.compose.material.icons.automirrored.rounded.CallMissedOutgoing
 import androidx.compose.material.icons.automirrored.rounded.CallReceived
 import androidx.compose.material.icons.outlined.Voicemail
 import androidx.compose.material.icons.outlined.WifiCalling3
@@ -16,7 +15,6 @@ val ArrowBackIcon = Icons.AutoMirrored.Outlined.ArrowBack
 val BackspaceIcon = Icons.AutoMirrored.Filled.Backspace
 val CallMadeIcon = Icons.AutoMirrored.Rounded.CallMade
 val CallMissedIcon = Icons.AutoMirrored.Rounded.CallMissed
-val CallMissedOutgoing = Icons.AutoMirrored.Rounded.CallMissedOutgoing
 val CallReceivedIcon = Icons.AutoMirrored.Rounded.CallReceived
 val PhoneDisabledIcon = Icons.Rounded.PhoneDisabled
 val PhoneMissedIcon = Icons.AutoMirrored.Outlined.PhoneMissed

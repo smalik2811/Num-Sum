@@ -7,8 +7,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -55,11 +55,11 @@ fun ConnectionScreen1(
         // generate and display the qr code
         val uidQRCode = QRCode
             .ofSquares()
-            .withBackgroundColor(MaterialTheme.colorScheme.secondaryContainer.toArgb())
-            .withColor(MaterialTheme.colorScheme.onSecondaryContainer.toArgb())
+            .withBackgroundColor(MaterialTheme.colorScheme.surface.toArgb())
+            .withColor(MaterialTheme.colorScheme.onSurface.toArgb())
             .build(uid)
 
-        ElevatedCard {
+        OutlinedCard {
             Image(
                 bitmap = (uidQRCode.render().nativeImage() as Bitmap).asImageBitmap(),
                 contentDescription = null,

@@ -58,29 +58,43 @@ class OnBoardViewModel @Inject constructor(
         }
     }
 
-    fun updateReceiverId(newReceiverId: String) {
+    private fun updateReceiverId(newReceiverId: String) {
         viewModelScope.launch {
             userPreferences.setReceiverId(newReceiverId)
         }
     }
 
-    fun updateOnBoardingCompleted(newOnboardingState: Boolean) {
+    private fun updateOnBoardingCompleted(newOnboardingState: Boolean) {
         viewModelScope.launch {
             userPreferences.setOnboardingDone(newOnboardingState)
         }
     }
 
-    fun registerLogsUploadWorkRequest(context: Context) {
+    fun handleSuccessfulScan(
+        receiverId: String,
+        context: Context,
+        navigateToTemporary: () -> Unit
+    ) {
+        viewModelScope.launch {
+            updateReceiverId(receiverId)
+            registerLogsUploadWorkRequest(context)
+            updateOnBoardingCompleted(true)
+            navigateToTemporary()
+        }
+    }
+
+    private fun registerLogsUploadWorkRequest(context: Context) {
         viewModelScope.launch {
 
             val workRequest = PeriodicWorkRequestBuilder<UploadWorkerScheduler>(
-                repeatInterval = 2,
+                repeatInterval = 6,
                 repeatIntervalTimeUnit = TimeUnit.HOURS
             ).build()
 
             val workManager = WorkManager.getInstance(context)
+
             workManager.enqueueUniquePeriodicWork(
-                "UPLOAD_CALL_LOGS_SCHEDULER",
+                "UPLOAD_CALL_LOGS_Scheduler",
                 ExistingPeriodicWorkPolicy.UPDATE,
                 workRequest
             )
