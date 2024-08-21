@@ -20,7 +20,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -74,7 +73,9 @@ fun WelcomeScreen(
     }
 
     val localContext = LocalContext.current
-    var isCallLogPermissionGranted by remember {
+    val permissionArray = mutableListOf<String>()
+
+    val isCallLogPermissionGranted by remember {
         mutableStateOf(
             ContextCompat.checkSelfPermission(
                 localContext,
@@ -84,9 +85,26 @@ fun WelcomeScreen(
     }
 
     if (!isCallLogPermissionGranted) {
+        permissionArray.add(Manifest.permission.READ_CALL_LOG)
+    }
+
+    val isCameraPermissionGranted by remember {
+        mutableStateOf(
+            ContextCompat.checkSelfPermission(
+                localContext,
+                Manifest.permission.CAMERA
+            ) == PackageManager.PERMISSION_GRANTED
+        )
+    }
+
+    if (!isCameraPermissionGranted) {
+        permissionArray.add(Manifest.permission.CAMERA)
+    }
+
+    if (permissionArray.isNotEmpty()) {
         ActivityCompat.requestPermissions(
             localContext as Activity,
-            arrayOf(Manifest.permission.READ_CALL_LOG),
+            permissionArray.toTypedArray(),
             1
         )
     }

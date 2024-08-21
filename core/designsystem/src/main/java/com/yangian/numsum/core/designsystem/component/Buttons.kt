@@ -81,8 +81,8 @@ fun CalculatorIconButton(
 
 @Preview(
     showSystemUi = true, device = "id:pixel_8_pro",
-    wallpaper = Wallpapers.BLUE_DOMINATED_EXAMPLE,
-    uiMode = Configuration.UI_MODE_NIGHT_NO or Configuration.UI_MODE_TYPE_NORMAL, apiLevel = 33
+    wallpaper = Wallpapers.YELLOW_DOMINATED_EXAMPLE,
+    uiMode = Configuration.UI_MODE_NIGHT_NO or Configuration.UI_MODE_TYPE_NORMAL
 )
 @Composable
 private fun CalculatorButtonPreview() {
@@ -140,7 +140,7 @@ private fun CalculatorButtonPreview() {
 @Preview(
     showSystemUi = true, device = "id:pixel_8_pro",
     wallpaper = Wallpapers.BLUE_DOMINATED_EXAMPLE,
-    uiMode = Configuration.UI_MODE_NIGHT_NO or Configuration.UI_MODE_TYPE_NORMAL, apiLevel = 33
+    uiMode = Configuration.UI_MODE_NIGHT_NO or Configuration.UI_MODE_TYPE_NORMAL, apiLevel = 34
 )
 @Composable
 private fun CalculatorIconButtonPreview() {
