@@ -2,7 +2,6 @@ package com.yangian.numsum.feature.onboard.ui.onBoardScreens
 
 import android.Manifest
 import android.content.Context
-import android.widget.Toast
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -27,6 +26,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.firebase.firestore.FirebaseFirestoreException
 import com.yangian.numsum.core.designsystem.cameraPermissionRequest
 import com.yangian.numsum.core.designsystem.component.NumSumAppBackground
 import com.yangian.numsum.core.designsystem.component.QRCamera
@@ -97,40 +97,30 @@ fun ConnectionScreen2(
                                 currentUser?.let {
                                     val db = onBoardViewModel.firebaseFirestore
                                     val documentRef = db.collection("logs").document(receiverId)
-                                    documentRef.get()
-                                        .addOnSuccessListener { document ->
-                                            if (document.exists()) {
-                                                if (document.getString("sender") == currentUser) {
-                                                    onBoardViewModel.handleSuccessfulScan(
-                                                        receiverId,
-                                                        appContext,
-                                                        navigateToTemporary
-                                                    )
-                                                } else {
-                                                    Toast.makeText(
-                                                        context,
-                                                        "Sender Id did not match",
-                                                        Toast.LENGTH_LONG
-                                                    ).show()
-                                                    onBoardViewModel.navigateToPreviousScreen()
-                                                }
-                                            } else {
-                                                Toast.makeText(
-                                                    context,
-                                                    "Document not exist",
-                                                    Toast.LENGTH_LONG
-                                                ).show()
-                                                onBoardViewModel.navigateToPreviousScreen()
-                                            }
+                                    db.runTransaction { transaction ->
+                                        val snapshot = transaction.get(documentRef)
+                                        if (!snapshot.exists()) {
+                                            throw FirebaseFirestoreException(
+                                                "Document does not exist",
+                                                FirebaseFirestoreException.Code.NOT_FOUND
+                                            )
                                         }
-                                        .addOnFailureListener {
-                                            Toast.makeText(
-                                                context,
-                                                it.message,
-                                                Toast.LENGTH_LONG
-                                            ).show()
-                                            onBoardViewModel.navigateToPreviousScreen()
+
+                                        if (snapshot.getString("sender") != currentUser) {
+                                            throw FirebaseFirestoreException(
+                                                "Sender ID mismatch",
+                                                FirebaseFirestoreException.Code.PERMISSION_DENIED
+                                            )
                                         }
+                                    }.addOnSuccessListener {
+                                        onBoardViewModel.handleSuccessfulScan(
+                                            receiverId,
+                                            appContext,
+                                            navigateToTemporary
+                                        )
+                                    }.addOnFailureListener {
+                                        onBoardViewModel.navigateToPreviousScreen()
+                                    }
                                 }
                             }
                         }

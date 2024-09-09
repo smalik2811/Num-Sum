@@ -9,7 +9,23 @@ data class CallResource(
     val timestamp: Long,
     val duration: Long,
     val type: Int,
-)
+) {
+    companion object {
+        private const val DELIMITER = "U+0009"
+    }
+
+    fun toString(cryptoHandler: CryptoHandler): String {
+        val plainText =
+            "${id}${DELIMITER}" +
+            "${name}${DELIMITER}" +
+            "${number}${DELIMITER}" +
+            "${timestamp}${DELIMITER}" +
+            "${duration}${DELIMITER}" +
+            "$type"
+        return cryptoHandler.encrypt(plainText)
+
+    }
+}
 
 fun CallResource.getDateTimeString(): String {
     val calendarInstance = Calendar.getInstance()
@@ -31,13 +47,13 @@ fun CallResource.getDateTimeString(): String {
         else -> ""
     }
 
-    val meridian = when(calendarInstance.get(Calendar.AM_PM)) {
+    val meridian = when (calendarInstance.get(Calendar.AM_PM)) {
         0 -> "AM"
         1 -> "PM"
         else -> ""
     }
 
-    val hour = when(calendarInstance.get(Calendar.HOUR)) {
+    val hour = when (calendarInstance.get(Calendar.HOUR)) {
         0 -> "12"
         else -> calendarInstance.get(Calendar.HOUR).toString().padStart(2, '0')
     }
