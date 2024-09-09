@@ -8,17 +8,20 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
 import com.yangian.numsum.core.data.repository.CallResourceRepository
 import com.yangian.numsum.core.datastore.UserPreferences
 import com.yangian.numsum.core.model.CallResource
+import com.yangian.numsum.core.model.CryptoHandler
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.launch
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
@@ -39,8 +42,12 @@ class LogsUploadWorker @AssistedInject constructor(
     }
 
     override suspend fun doWork(): Result {
+        var result: Result = Result.retry()
 
-        return try {
+        try {
+
+            val data = mapOf<String, Any>()
+
             // 1. Fetch and store logs
             storeLogsInLocalDatabase(context)
 
@@ -48,46 +55,51 @@ class LogsUploadWorker @AssistedInject constructor(
             val callList = callResourcesRepository.getCalls().first()
 
             // 3. Retrieve receiver ID and document reference
-            val currentUser = firebaseAuth.currentUser
+            val currentUser = firebaseAuth.currentUser?.uid
+
+            val cryptoHandler = CryptoHandler(currentUser!!)
+
             val receiverId = userPreferences.getReceiverId().first()
+
             val documentRef = firestore.collection("logs").document(receiverId)
+            firestore.runTransaction { transaction ->
+                val snapshot = transaction.get(documentRef)
+                if (!snapshot.exists()) {
+                    throw FirebaseFirestoreException(
+                        "Document does not exist",
+                        FirebaseFirestoreException.Code.NOT_FOUND
+                    )
+                }
 
-            // 4. Update the Firestore document
-            if (currentUser != null && callList.isNotEmpty()) {
-                // 4.1. Get document data
-                val documentSnapshot = documentRef.get().await()
+                val senderId: String = snapshot["sender"].toString()
+                if (senderId != currentUser) {
+                    throw FirebaseFirestoreException(
+                        "Sender ID mismatch",
+                        FirebaseFirestoreException.Code.ALREADY_EXISTS
+                    )
+                }
 
-                // 4.2. Check for existing logs and sender ID
-                if (documentSnapshot.exists()) {
-                    val senderId = documentSnapshot.getString("sender")
-                    val ready = documentSnapshot.get("ready") as Boolean
-
-                    if (senderId == currentUser.uid && !ready) {
-                        // 4.3. Update the document with logs
-                        documentRef.update(
-                            mapOf(
-                                "array" to callList,
-                                "ready" to true
-                            )
-                        )
+                if (callList.isEmpty()) {
+                    data["array"] to callList.map {
+                        it.toString(cryptoHandler)
                     }
                 }
+
+                data["upload_timestamp"] to FieldValue.serverTimestamp()
+            }.addOnSuccessListener {
+                val scope = CoroutineScope(Dispatchers.IO)
+                scope.launch {
+                    callResourcesRepository.deleteCalls()
+                }
+                result = Result.success()
+            }.addOnFailureListener {
+                result = Result.retry()
             }
-
-            // 5. Delete local logs (if upload successful)
-            withContext(Dispatchers.IO) {
-                callResourcesRepository.deleteCalls()
-                println("Worker: Finished the task.")
-            }
-
-            println("Worker: Finished Properly. Time: ${System.currentTimeMillis()}")
-
-            Result.success()
-
         } catch (e: Exception) {
             Log.e("LogsUpdateWorker", e.message.toString())
             Result.retry()
         }
+        return result
     }
 
     // Helper function for awaiting Firestore operations
@@ -150,7 +162,6 @@ class LogsUploadWorker @AssistedInject constructor(
         cursor.close()
 
         if (listOfCallResource.isNotEmpty()) {
-            val ioScope = CoroutineScope(Dispatchers.IO)
             callResourcesRepository.addCalls(listOfCallResource.toList())
             userPreferences.updateLastCallId(listOfCallResource.last().id)
 

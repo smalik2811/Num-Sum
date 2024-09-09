@@ -14,12 +14,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.invoke
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 @HiltViewModel
@@ -54,39 +52,6 @@ class TemporaryViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = CallFeedUiState.Loading
         )
-
-    fun uploadLogsToFirestore() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val callList = callResourcesRepository.getCalls().first()
-
-            // Retrieve receiver ID and document reference
-            val currentUser = firebaseAuth.currentUser
-            val receiverId = userPreferences.getReceiverId().first()
-            val documentRef = firestore.collection("logs").document(receiverId)
-
-            // Update the Firestore document
-            if (currentUser != null && callList.isNotEmpty()) {
-                // 4.1. Get document data
-                val documentSnapshot = documentRef.get().await()
-
-                // 4.2. Check for existing logs and sender ID
-                if (documentSnapshot.exists()) {
-                    val senderId = documentSnapshot.getString("sender")
-                    val ready = documentSnapshot.get("ready") as Boolean
-
-                    if (senderId == currentUser.uid && !ready) {
-                        // 4.3. Update the document with logs
-                        documentRef.set(
-                            mapOf(
-                                "array" to callList,
-                                "ready" to true
-                            )
-                        )
-                    }
-                }
-            }
-        }
-    }
 
     fun addCalls(calls: List<CallResource>) {
         viewModelScope.launch {

@@ -149,13 +149,6 @@ fun TemporaryRoute(
                     Text("Show Logs")
                 }
 
-                Button(
-                    onClick = {
-                        temporaryViewModel.uploadLogsToFirestore()
-                    }
-                ) {
-                    Text("Upload Logs")
-                }
             }
             // Display call records
             Box(
