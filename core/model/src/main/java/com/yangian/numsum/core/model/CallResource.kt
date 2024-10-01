@@ -14,7 +14,7 @@ data class CallResource(
         private const val DELIMITER = "U+0009"
     }
 
-    fun toString(cryptoHandler: CryptoHandler): String {
+    override fun toString(): String {
         val plainText =
             "${id}${DELIMITER}" +
             "${name}${DELIMITER}" +
@@ -22,7 +22,7 @@ data class CallResource(
             "${timestamp}${DELIMITER}" +
             "${duration}${DELIMITER}" +
             "$type"
-        return cryptoHandler.encrypt(plainText)
+        return plainText
 
     }
 }

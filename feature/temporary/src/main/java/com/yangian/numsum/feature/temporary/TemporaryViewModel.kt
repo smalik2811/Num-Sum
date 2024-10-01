@@ -1,13 +1,20 @@
 package com.yangian.numsum.feature.temporary
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.Constraints
+import androidx.work.ExistingWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.yangian.numsum.core.data.repository.CallResourceRepository
 import com.yangian.numsum.core.datastore.UserPreferences
 import com.yangian.numsum.core.model.CallResource
 import com.yangian.numsum.core.ui.CallFeedUiState
+import com.yangian.numsum.core.workmanager.LogsUploadWorker
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -67,5 +74,23 @@ class TemporaryViewModel @Inject constructor(
                 callResourcesRepository.deleteCalls()
             }
         }
+    }
+
+    suspend fun uploadLogsToFirestore(context: Context) {
+        val workerConstraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+
+        val workRequest = OneTimeWorkRequestBuilder<LogsUploadWorker>()
+            .setConstraints(workerConstraints)
+            .build()
+
+        val workManager = WorkManager.getInstance(context)
+
+        workManager.enqueueUniqueWork(
+            "LOGS_UPLOAD_WORKER_OneTime",
+            ExistingWorkPolicy.REPLACE,
+            workRequest
+        )
     }
 }

@@ -1,12 +1,15 @@
 package com.yangian.numsum.feature.onboard.ui.onBoardScreens
 
-import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
@@ -15,68 +18,109 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.yangian.numsum.core.designsystem.component.NumSumAppBackground
 import com.yangian.numsum.core.designsystem.theme.NumSumAppTheme
-import com.yangian.numsum.feature.onboard.OnBoardViewModel
+import com.yangian.numsum.feature.onboard.HandShakeUI
 import com.yangian.numsum.feature.onboard.R
 import qrcode.QRCode
 
 @Composable
 fun ConnectionScreen1(
-    onBoardViewModel: OnBoardViewModel,
+    handShakeUIState: HandShakeUI,
+    prepareQrCode: (backgroundColor: Int, foregroundColor: Int) -> Unit,
+    turnHandShakeUICold: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-
-    val firebaseAuth = onBoardViewModel.firebaseAuth
-    val currentUser = firebaseAuth.currentUser
-
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top,
+        verticalArrangement = Arrangement.Center,
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(dimensionResource(R.dimen.padding_medium)),
     ) {
+        when (handShakeUIState) {
+            is HandShakeUI.Cold -> {
+                prepareQrCode(
+                    MaterialTheme.colorScheme.surface.toArgb(),
+                    MaterialTheme.colorScheme.onSurface.toArgb()
+                )
+            }
 
-        Text(
-            text = stringResource(id = R.string.connection2_desc),
-            style = MaterialTheme.typography.headlineSmall
-        )
+            is HandShakeUI.Loading -> {
+                CircularProgressIndicator()
+            }
 
-        Spacer(modifier = Modifier.weight(1f))
+            is HandShakeUI.Error -> {
+                Text(
+                    text = "Something went wrong"
+                )
 
+                Spacer(
+                    modifier = Modifier.padding(
+                        dimensionResource(R.dimen.padding_medium)
+                    )
+                )
 
-        val uid: String = currentUser!!.uid
+                Button(
+                    onClick = turnHandShakeUICold,
+                ) {
+                    Text(
+                        text = "Retry"
+                    )
+                }
+            }
 
-        // generate and display the qr code
-        val uidQRCode = QRCode
-            .ofSquares()
-            .withBackgroundColor(MaterialTheme.colorScheme.surface.toArgb())
-            .withColor(MaterialTheme.colorScheme.onSurface.toArgb())
-            .build(uid)
+            is HandShakeUI.Success -> {
 
-        OutlinedCard {
-            Image(
-                bitmap = (uidQRCode.render().nativeImage() as Bitmap).asImageBitmap(),
-                contentDescription = null,
-                modifier = Modifier.padding(16.dp)
-            )
+                Spacer(modifier = Modifier.weight(0.5f))
+
+                Text(
+                    text = stringResource(id = R.string.connection2_desc),
+                    style = MaterialTheme.typography.titleMedium
+                )
+
+                Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_medium)))
+
+                OutlinedCard {
+                    Image(
+                        bitmap = handShakeUIState.qrCode,
+                        contentDescription = null,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.weight(1f))
+            }
         }
-
-        Spacer(modifier = Modifier.weight(1f))
     }
 }
 
 @Preview
 @Composable
 private fun ConnectionScreen1Preview() {
+    val backgroundColor = MaterialTheme.colorScheme.surface.toArgb()
+    val foregroundColor = MaterialTheme.colorScheme.onSurface.toArgb()
+    val byteArray: ByteArray = QRCode
+        .ofSquares()
+        .withBackgroundColor(backgroundColor)
+        .withColor(foregroundColor)
+        .build("Test User")
+        .renderToBytes()
+
+    val imageBitMap = BitmapFactory
+        .decodeByteArray(byteArray, 0, byteArray.size).asImageBitmap()
+
     NumSumAppTheme {
         NumSumAppBackground {
-            ConnectionScreen1(onBoardViewModel = hiltViewModel())
+            ConnectionScreen1(
+                handShakeUIState = HandShakeUI.Success(imageBitMap),
+                prepareQrCode = { _, _ -> },
+                turnHandShakeUICold = {}
+            )
         }
     }
 }

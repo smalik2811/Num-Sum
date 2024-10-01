@@ -10,5 +10,6 @@ enum class OnBoardingScreens(
     TermsOfService(R.string.tos_title),
     Welcome(R.string.welcome_title),
     Connection1(R.string.connection_title),
-    Connection2(R.string.connection_title)
+    Connection2(R.string.connection_title),
+    DkmaScreen(R.string.dkma_title)
 }

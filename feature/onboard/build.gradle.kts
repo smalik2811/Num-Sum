@@ -62,6 +62,7 @@ dependencies {
 
     // Dagger-Hilt
     implementation(libs.dagger.hilt.android)
+    implementation(project(":core:model"))
     kapt(libs.dagger.hilt.compiler)
 
     // Lifecycle
@@ -84,6 +85,9 @@ dependencies {
     // Work Manager
     implementation(libs.androidx.work.runtime)
 
+    // Compose Markdown
+    implementation(libs.compose.markdown)
+
     // Test Dependencies
     testImplementation(libs.junit)
 
@@ -96,4 +100,5 @@ dependencies {
     implementation(project(":core:firebase"))
     implementation(project(":core:datastore"))
     implementation(project(":core:workmanager"))
+    implementation(project(":core:network"))
 }

@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.yangian.numsum.core.constant.Constant.LAST_CALL_ID
+import com.yangian.numsum.core.constant.Constant.LOGS_ENCRYPTION_KEY_PREFERENCE_KEY
 import com.yangian.numsum.core.constant.Constant.ONBOARDING_DONE
 import com.yangian.numsum.core.constant.Constant.RECEIVER_ID
 import kotlinx.coroutines.Dispatchers
@@ -24,6 +25,7 @@ class UserPreferences @Inject constructor(
         val LAST_CALL_ID_KEY = longPreferencesKey(LAST_CALL_ID)
         val RECEIVER_ID_KEY = stringPreferencesKey(RECEIVER_ID)
         val ONBOARDING_DONE_KEY = booleanPreferencesKey(ONBOARDING_DONE)
+        val LOGS_ENCRYPTION_KEY = stringPreferencesKey(LOGS_ENCRYPTION_KEY_PREFERENCE_KEY)
     }
 
     fun getLastCallId(): Flow<Long> {
@@ -41,6 +43,12 @@ class UserPreferences @Inject constructor(
     fun getOnboardingDone(): Flow<Boolean> {
         return dataStore.data.map {
             it[ONBOARDING_DONE_KEY] ?: false
+        }
+    }
+
+    fun getLogsEncryptionKey(): Flow<String?> {
+        return dataStore.data.map {
+            it[LOGS_ENCRYPTION_KEY]
         }
     }
 
@@ -70,6 +78,16 @@ class UserPreferences @Inject constructor(
         withContext(Dispatchers.IO) {
             dataStore.edit {
                 it[ONBOARDING_DONE_KEY] = newOnboardingDone
+            }
+        }
+    }
+
+    suspend fun setLogsEncryptionKey(
+        newLogsEncryptionKey: String
+    ) {
+        withContext(Dispatchers.IO) {
+            dataStore.edit {
+                it[LOGS_ENCRYPTION_KEY] = newLogsEncryptionKey
             }
         }
     }
