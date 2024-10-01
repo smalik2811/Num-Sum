@@ -9,5 +9,6 @@ object Constant {
     const val ONBOARDING_DONE = "onboarding_done"
     const val SENDER_ID = "sender_id"
     const val FIRESTORE_CALL_COLLECTION_NAME = "call-logs"
+    const val LOGS_ENCRYPTION_KEY_PREFERENCE_KEY = "logs_encryption_key"
 
 }

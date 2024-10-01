@@ -74,11 +74,15 @@ dependencies {
     implementation(libs.firebase.cloud.firestore)
     implementation(libs.firebase.auth)
 
+    // Work Manager
+    implementation(libs.androidx.work.runtime)
+
     // Hilt
     implementation(libs.androidx.hilt.navigation)
 
     // Dagger-Hilt
     implementation(libs.dagger.hilt.android)
+    implementation(project(":core:workmanager"))
     kapt(libs.dagger.hilt.compiler)
 
     // Navigation
