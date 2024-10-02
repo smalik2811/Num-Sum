@@ -6,8 +6,8 @@ sealed class NumSumDestination(
     data object Calculator: NumSumDestination(
         route = "calculator"
     )
-    data object Temporary: NumSumDestination(
-        route = "temporary"
+    data object Home: NumSumDestination(
+        route = "home"
     )
     data object OnBoard: NumSumDestination(
         route = "onBoard"

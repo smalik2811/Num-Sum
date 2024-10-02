@@ -51,6 +51,15 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    flavorDimensions += listOf("paidMode")
+    productFlavors {
+        create("free") {
+            dimension = "paidMode"
+        }
+        create("paid") {
+            dimension = "paidMode"
+        }
+    }
 }
 
 dependencies {
@@ -78,6 +87,7 @@ dependencies {
     implementation(libs.dagger.hilt.android)
     implementation(project(":core:firebase"))
     implementation(project(":core:firebase"))
+    implementation(libs.androidx.lifecycle.runtime.compose.android)
     kapt(libs.dagger.hilt.compiler)
 
     // Firebase
@@ -106,7 +116,7 @@ dependencies {
 
     // Project Modules
     implementation(project(":feature:calculator"))
-    implementation(project(":feature:temporary"))
+    implementation(project(":feature:home"))
     implementation(project(":core:designsystem"))
     implementation(project(":feature:onboard"))
     implementation(project(":core:datastore"))

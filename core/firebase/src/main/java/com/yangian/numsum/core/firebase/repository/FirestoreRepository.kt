@@ -25,6 +25,8 @@ interface FirestoreRepository {
         firebaseUser: String,
     )
 
+    suspend fun deleteRecords(receiverId: String)
+
     suspend fun addData(
         senderId: String,
         receiverId: String,

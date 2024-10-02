@@ -6,8 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import com.yangian.numsum.feature.calculator.navigation.calculatorScreen
+import com.yangian.numsum.feature.home.navigation.homeScreen
 import com.yangian.numsum.feature.onboard.navigation.onBoardScreen
-import com.yangian.numsum.feature.temporary.navigation.temporaryScreen
 import com.yangian.numsum.ui.NumSumAppState
 
 @Composable
@@ -33,7 +33,9 @@ fun NumSumAppNavHost(
             }
         )
 
-        temporaryScreen()
+        homeScreen(navigateToCalculator = {
+            appState.navigateToDestination(NumSumDestination.Calculator)
+        })
 
         onBoardScreen(
             windowSizeClass = windowSizeClass,
@@ -41,8 +43,8 @@ fun NumSumAppNavHost(
             navigateToCalculator = {
                 appState.navigateToDestination(NumSumDestination.Calculator)
             },
-            navigateToTemporary = {
-                appState.navigateToDestination(NumSumDestination.Temporary)
+            navigateToHome = {
+                appState.navigateToDestination(NumSumDestination.Home)
             }
         )
     }

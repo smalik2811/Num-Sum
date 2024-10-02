@@ -1,6 +1,7 @@
 package com.yangian.numsum.core.firebase.repository
 
 import android.content.Context
+import android.icu.text.SimpleDateFormat
 import android.provider.CallLog
 import android.util.Log
 import com.google.firebase.firestore.DocumentSnapshot
@@ -13,6 +14,7 @@ import com.yangian.numsum.core.datastore.UserPreferences
 import com.yangian.numsum.core.model.CallResource
 import com.yangian.numsum.core.model.cryptography.CryptoHandler
 import kotlinx.coroutines.flow.first
+import java.util.Locale
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -105,6 +107,22 @@ class DefaultFirestoreRepository @Inject constructor(
 
     }
 
+    override suspend fun deleteRecords(receiverId: String) {
+        val document = getFirestoreDocument("logs", receiverId)
+        if (document.exists()) {
+            val data = hashMapOf(
+                "sender" to FieldValue.delete()
+            )
+
+            setFirestoreDocument(
+                "logs",
+                receiverId,
+                data,
+                SetOptions.merge()
+            )
+        }
+    }
+
     @Throws
     override suspend fun addData(
         senderId: String,
@@ -151,6 +169,13 @@ class DefaultFirestoreRepository @Inject constructor(
         )
 
         callResourcesRepository.deleteCalls()
+        val currentTime = System.currentTimeMillis()
+        val dateFormat = SimpleDateFormat(
+            "dd MMM, yy, HH:mm:a",
+            Locale.getDefault()
+        )
+        val formattedTime = dateFormat.format(currentTime)
+        userPreferences.setLastUploadedTimeStamp(formattedTime)
         return FirestoreResult.Success
     }
 
@@ -208,7 +233,7 @@ class DefaultFirestoreRepository @Inject constructor(
 
         if (listOfCallResource.isNotEmpty()) {
             callResourcesRepository.addCalls(listOfCallResource.toList())
-            userPreferences.updateLastCallId(listOfCallResource.last().id)
+            userPreferences.setLastCallId(listOfCallResource.last().id)
 
         }
     }

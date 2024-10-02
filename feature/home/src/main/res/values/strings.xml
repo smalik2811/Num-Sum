@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Num Sum</string>
+    <string name="menu">Menu</string>
+    <string name="sign_out">Sign out</string>
+    <string name="upload_logs">Upload Logs</string>
+    <string name="sign_out_dialog_title">Are you sure you want to sign out?</string>
+    <string name="sign_out_dialog_description">Once signed out, you will no longer receive latest call logs and the existing logs will be deleted.</string>
+    <string name="yes">Yes</string>
+    <string name="cancel">Cancel</string>
+    <string name="logout">Logout</string>
+    <string name="all_done">All Done</string>
+    <string name="uploading_in_background">Uploading Call Logs in background</string>
+</resources>
