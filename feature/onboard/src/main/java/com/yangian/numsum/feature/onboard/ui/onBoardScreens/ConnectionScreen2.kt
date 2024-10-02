@@ -52,9 +52,9 @@ fun ConnectionScreen2(
     validateReceiver: (
         scannedReceiverId: String,
         context: Context,
-        navigateToTemporary: () -> Unit,
+        navigateToHome: () -> Unit,
     ) -> Unit,
-    navigateToTemporary: () -> Unit,
+    navigateToHome: () -> Unit,
     navigateToPreviousScreen: () -> Unit,
     modifier: Modifier = Modifier,
     isPreviewing: Boolean = false
@@ -85,7 +85,7 @@ fun ConnectionScreen2(
 
         if (!hasScanned) {
             Text(
-                text = "Point the camera towards CallSync app and scan the QR code",
+                text = "Point the camera towards Call Sync app and scan the QR code",
                 style = MaterialTheme.typography.titleMedium
             )
 
@@ -148,7 +148,7 @@ fun ConnectionScreen2(
                         validateReceiver(
                             scannedValue!!,
                             context,
-                            navigateToTemporary
+                            navigateToHome
                         )
                     }
                 }

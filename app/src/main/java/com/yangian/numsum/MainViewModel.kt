@@ -23,7 +23,7 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             userPreferences.getOnboardingDone().collect() { completed ->
                 if (completed) {
-                    _startDestination.value = NumSumDestination.Temporary
+                    _startDestination.value = NumSumDestination.Home
                 } else {
                     _startDestination.value = NumSumDestination.OnBoard
                 }

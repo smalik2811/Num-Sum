@@ -249,12 +249,12 @@ class OnBoardViewModel @Inject constructor(
     fun validateReceiver(
         scannedReceiverId: String,
         context: Context,
-        navigateToTemporary: () -> Unit
+        navigateToHome: () -> Unit
     ) {
         try {
             viewModelScope.launch(Dispatchers.IO) {
                 firestoreRepository.validateReceiver(scannedReceiverId, getFirebaseUser())
-                handleSuccessfulScan(scannedReceiverId, context, navigateToTemporary)
+                handleSuccessfulScan(scannedReceiverId, context, navigateToHome)
             }
         } catch (exception: Exception) {
             Log.e("GM", "Error validating receiver", exception)
@@ -265,13 +265,13 @@ class OnBoardViewModel @Inject constructor(
     private fun handleSuccessfulScan(
         receiverId: String,
         context: Context,
-        navigateToTemporary: () -> Unit
+        navigateToHome: () -> Unit
     ) {
         viewModelScope.launch {
             setReceiverId(receiverId)
             registerLogsUploadWorkRequest(context)
             setOnBoardingCompleted()
-            navigateToTemporary()
+            navigateToHome()
         }
     }
 

@@ -22,7 +22,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "NumSum"
 include(":app")
-include(":feature:temporary")
+include(":feature:home")
 include(":feature:calculator")
 include(":core:designsystem")
 include(":core:database")
@@ -35,3 +35,4 @@ include(":core:firebase")
 include(":feature:onboard")
 include(":core:workmanager")
 include(":core:network")
+include(":core:common")

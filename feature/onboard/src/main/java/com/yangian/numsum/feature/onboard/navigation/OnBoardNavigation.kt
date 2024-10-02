@@ -12,13 +12,13 @@ fun NavGraphBuilder.onBoardScreen(
     windowSizeClass: WindowSizeClass,
     appContext: Context,
     navigateToCalculator: () -> Unit,
-    navigateToTemporary: () -> Unit,
+    navigateToHome: () -> Unit,
 ) {
     composable(route = ONBOARD_ROUTE) {
         OnBoardRoute(
             appContext = appContext,
             navigateToCalculator = navigateToCalculator,
-            navigateToTemporary = navigateToTemporary,
+            navigateToHome = navigateToHome,
         )
     }
 }

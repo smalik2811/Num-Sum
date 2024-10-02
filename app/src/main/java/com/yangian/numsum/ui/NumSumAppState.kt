@@ -1,39 +1,59 @@
 package com.yangian.numsum.ui
 
-import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.yangian.numsum.core.data.util.NetworkMonitor
 import com.yangian.numsum.navigation.NumSumDestination
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 
 @Composable
 fun rememberNumSumAppState(
-    windowSizeClass: WindowSizeClass,
     navController: NavHostController = rememberNavController(),
+    coroutineScope: CoroutineScope = rememberCoroutineScope(),
+    networkMonitor: NetworkMonitor
 ): NumSumAppState {
-    return remember(navController, windowSizeClass) {
-        NumSumAppState(navController)
+    return remember(navController) {
+        NumSumAppState(
+            navController,
+            coroutineScope,
+            networkMonitor
+        )
     }
 }
 
 @Stable
-class NumSumAppState (
+class NumSumAppState(
     val navController: NavHostController,
+    coroutineScope: CoroutineScope,
+    networkMonitor: NetworkMonitor,
 ) {
 
     private val numSumDestinations: List<NumSumDestination> = listOf(
         NumSumDestination.Calculator,
         NumSumDestination.OnBoard,
-        NumSumDestination.Temporary,
+        NumSumDestination.Home,
     )
+
+    val isOffline = networkMonitor.isOnline
+        .map(Boolean::not)
+        .stateIn(
+            scope = coroutineScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = false
+        )
 
     fun navigateToDestination(destination: NumSumDestination) {
         when (destination) {
             NumSumDestination.Calculator -> navController.navigate(NumSumDestination.Calculator.route)
-            NumSumDestination.OnBoard -> navController.navigate(NumSumDestination.OnBoard.route)
-            NumSumDestination.Temporary -> navController.navigate(NumSumDestination.Temporary.route)
+            NumSumDestination.OnBoard -> {navController.navigate(NumSumDestination.OnBoard.route)}
+            NumSumDestination.Home -> {navController.navigate(NumSumDestination.Home.route)}
         }
     }
 

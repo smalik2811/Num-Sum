@@ -43,6 +43,7 @@ dependencies {
 
     // Dagger-Hilt
     implementation(libs.dagger.hilt.android)
+    implementation(project(":core:common"))
     kapt(libs.dagger.hilt.compiler)
 
     // test
