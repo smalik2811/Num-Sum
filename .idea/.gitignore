@@ -1,6 +1,8 @@
 # Default ignored files
 /shelf/
 /workspace.xml
+/inspectionProfiles/
+/modules/
 /material_theme_project_new.xml
 /vcs.xml
 /render.experimental.xml
