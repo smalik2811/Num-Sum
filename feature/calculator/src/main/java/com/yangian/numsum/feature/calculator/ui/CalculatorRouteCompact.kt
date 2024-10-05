@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.yangian.numsum.core.designsystem.component.CalculatorButton
 import com.yangian.numsum.core.designsystem.component.CalculatorIconButton
+import com.yangian.numsum.core.designsystem.component.admob.AdMobBannerCompact
 import com.yangian.numsum.core.designsystem.icon.BackspaceIcon
 import com.yangian.numsum.core.designsystem.theme.NumSumAppTheme
 import com.yangian.numsum.feature.calculator.CalculatorViewModel
@@ -434,6 +435,8 @@ fun CalculatorRouteCompact(
                 }
             )
         }
+
+        AdMobBannerCompact(modifier = Modifier.fillMaxWidth())
     }
 }
 

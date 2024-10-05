@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.googleServices)
     kotlin("kapt")
     alias(libs.plugins.daggerHilt)
+    alias(libs.plugins.secrets.gradle.plugin)
 }
 
 android {
@@ -42,6 +43,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.13"
@@ -79,6 +81,9 @@ dependencies {
 
     // Splash API
     implementation(libs.androidx.core.splashscreen)
+
+    // Play Services
+    implementation(libs.play.services.ads)
 
     // Hilt
     implementation(libs.androidx.hilt.navigation)

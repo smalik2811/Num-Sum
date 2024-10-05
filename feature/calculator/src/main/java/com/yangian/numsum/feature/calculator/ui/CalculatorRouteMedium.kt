@@ -421,7 +421,6 @@ fun CalculatorRouteMedium(
 }
 
 @Preview(
-    device = "spec:id=reference_tablet,shape=Normal,width=1280,height=800,unit=dp,dpi=240",
     showSystemUi = true,
     apiLevel = 33
 )

@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     id("kotlin-parcelize")
+    alias(libs.plugins.secrets.gradle.plugin)
 }
 
 android {
@@ -34,9 +35,14 @@ android {
     buildFeatures {
         compose = true
         viewBinding = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.13"
+    }
+    secrets {
+        // This production secrets file and going to contains real secrets
+        propertiesFileName = "local.properties"
     }
 }
 
@@ -56,6 +62,13 @@ dependencies {
     implementation(libs.androidx.ui.tooling)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material.icons)
+
+    // Google Admob ads
+    implementation(libs.play.services.ads)
+
+    // Coil library
+    implementation(libs.coil.compose)
+    implementation(libs.coil.gif)
 
     // Google Play Services
     implementation(libs.mlkit.barcode.scanning)

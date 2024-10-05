@@ -7,6 +7,7 @@ import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSiz
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.google.android.gms.ads.MobileAds
 import com.yangian.numsum.core.data.util.NetworkMonitor
 import com.yangian.numsum.core.designsystem.component.NumSumAppBackground
 import com.yangian.numsum.core.designsystem.theme.NumSumAppTheme
@@ -27,7 +28,7 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        MobileAds.initialize(this@MainActivity)
         installSplashScreen().setKeepOnScreenCondition {
             !mainViewModel.isSplashVisible.value
         }

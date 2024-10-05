@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.googleServices) // Firebase Connection
     kotlin("kapt")
     alias(libs.plugins.daggerHilt)
+    alias(libs.plugins.secrets.gradle.plugin)
 }
 
 android {
@@ -35,6 +36,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.13"
@@ -59,6 +61,10 @@ android {
                 srcDirs("src\\free\\java", "src\\free\\java")
             }
         }
+    }
+    secrets {
+        // This production secrets file and going to contains real secrets
+        propertiesFileName = "local.properties"
     }
 }
 
@@ -92,6 +98,9 @@ dependencies {
 
     // Work Manager
     implementation(libs.androidx.work.runtime)
+
+    // Google Admob ads
+    implementation(libs.play.services.ads)
 
     // Hilt
     implementation(libs.androidx.hilt.navigation)

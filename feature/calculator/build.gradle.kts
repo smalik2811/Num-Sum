@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     kotlin("kapt")
     alias(libs.plugins.daggerHilt)
+    alias(libs.plugins.secrets.gradle.plugin)
 }
 
 android {
@@ -34,9 +35,14 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.13"
+    }
+    secrets {
+        // This production secrets file and going to contains real secrets
+        propertiesFileName = "local.properties"
     }
 }
 
@@ -59,6 +65,9 @@ dependencies {
 
     // Hilt
     implementation(libs.androidx.hilt.navigation)
+
+    // Google Admob ads
+    implementation(libs.play.services.ads)
 
     // Dagger-Hilt
     implementation(libs.dagger.hilt.android)
