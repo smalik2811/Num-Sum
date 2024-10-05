@@ -1,5 +1,6 @@
 package com.yangian.numsum.core.data.di
 
+import androidx.annotation.Keep
 import com.yangian.numsum.core.data.repository.CallResourceRepository
 import com.yangian.numsum.core.data.repository.DefaultCallResourceRepository
 import com.yangian.numsum.core.data.util.ConnectivityManagerNetworkMonitor
@@ -8,6 +9,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+
 
 @Module
 @InstallIn(SingletonComponent::class) // Change to ActivityComponent

@@ -1,5 +1,6 @@
 package com.yangian.numsum.core.firebase.di
 
+import androidx.annotation.Keep
 import com.google.firebase.ktx.Firebase
 import dagger.Module
 import dagger.Provides

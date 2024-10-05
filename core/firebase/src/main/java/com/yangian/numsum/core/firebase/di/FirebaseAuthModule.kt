@@ -1,5 +1,6 @@
 package com.yangian.numsum.core.firebase.di
 
+import androidx.annotation.Keep
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase

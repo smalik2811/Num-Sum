@@ -1,6 +1,7 @@
 package com.yangian.numsum.core.datastore.di
 
 import android.content.Context
+import androidx.annotation.Keep
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.preferencesDataStoreFile
 import com.yangian.numsum.core.constant.Constant.NUMSUM_PREFERENCES_DATASTORE
@@ -17,7 +18,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object DataStoreModule {
+internal object DataStoreModule {
 
     @Provides
     @Singleton

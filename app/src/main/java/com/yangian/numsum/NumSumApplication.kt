@@ -3,6 +3,7 @@ package com.yangian.numsum
 import android.app.Application
 import android.content.Context
 import android.util.Log
+import androidx.annotation.Keep
 import androidx.work.Configuration
 import androidx.work.ListenableWorker
 import androidx.work.WorkerFactory

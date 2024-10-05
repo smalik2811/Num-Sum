@@ -1,5 +1,6 @@
 package com.yangian.numsum.core.firebase.di
 
+import androidx.annotation.Keep
 import com.google.firebase.firestore.FirebaseFirestore
 import com.yangian.numsum.core.data.repository.CallResourceRepository
 import com.yangian.numsum.core.datastore.UserPreferences

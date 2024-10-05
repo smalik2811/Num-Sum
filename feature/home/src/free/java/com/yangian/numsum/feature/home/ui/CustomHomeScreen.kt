@@ -1,6 +1,7 @@
 package com.yangian.numsum.feature.home.ui
 
 import android.content.Context
+import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -20,21 +21,32 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.Wallpapers
+import com.google.android.gms.ads.nativead.NativeAd
 import com.yangian.numsum.core.designsystem.component.CustomAlertDialog
 import com.yangian.numsum.core.designsystem.component.NumSumAppBackground
+import com.yangian.numsum.core.designsystem.component.admob.AdMobBannerExpanded
+import com.yangian.numsum.core.designsystem.component.admob.CallNativeAd
+import com.yangian.numsum.core.designsystem.component.admob.loadNativeAd
 import com.yangian.numsum.core.designsystem.icon.CheckCircleIcon
 import com.yangian.numsum.core.designsystem.icon.LogoutIcon
 import com.yangian.numsum.core.designsystem.icon.MoreVertIcon
 import com.yangian.numsum.core.designsystem.theme.NumSumAppTheme
 import com.yangian.numsum.core.designsystem.theme.extendedDark
 import com.yangian.numsum.core.designsystem.theme.extendedLight
+import com.yangian.numsum.feature.home.BuildConfig
 import com.yangian.numsum.feature.home.R
 
 @OptIn(ExperimentalMaterial3Api::class)

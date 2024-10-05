@@ -1,5 +1,6 @@
 package com.yangian.numsum.core.data.repository
 
+import androidx.annotation.Keep
 import com.yangian.numsum.core.model.CallResource
 import kotlinx.coroutines.flow.Flow
 

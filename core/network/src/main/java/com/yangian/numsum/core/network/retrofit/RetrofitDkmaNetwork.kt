@@ -1,5 +1,6 @@
 package com.yangian.numsum.core.network.retrofit
 
+import androidx.annotation.Keep
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.yangian.numsum.core.network.model.DkmaManufacturer
 import kotlinx.serialization.Serializable
