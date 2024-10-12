@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.StarHalf
 import androidx.compose.material.icons.filled.StarRate
@@ -58,91 +59,6 @@ import com.yangian.numsum.core.designsystem.R
 import com.yangian.numsum.core.designsystem.component.NumSumAppBackground
 import com.yangian.numsum.core.designsystem.theme.NumSumAppTheme
 
-//@Composable
-//private fun LoadAdContent(nativeAd: NativeAd?, composeView: View) {
-//
-//    nativeAd?.let { ad ->
-//        ListItem(
-//            overlineContent = {
-//                Row(
-//                    verticalAlignment = Alignment.CenterVertically
-//                ) {
-//                    Text(
-//                        text = "${ad.headline}",
-//                        color = MaterialTheme.colorScheme.onSurface,
-//                        style = MaterialTheme.typography.titleMedium,
-//                    )
-//                }
-//            },
-//            headlineContent = {
-//                Row(
-//                    horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_small)),
-//                    verticalAlignment = Alignment.CenterVertically,
-//                    modifier = Modifier.fillMaxWidth()
-//                ) {
-//                    Image(
-//                        painter = painterResource(R.drawable.ad_badge),
-//                        contentDescription = "Ad badge",
-//                        modifier = Modifier
-//                            .size(24.dp)
-//                    )
-//
-//                    if (ad.starRating != null) {
-//                        StarRating(
-//                            rating = ad.starRating!!,
-//                            modifier = Modifier.wrapContentSize()
-//                        )
-//                    } else {
-//                        Text(
-//                            text = ad.store ?: ad.advertiser ?: "",
-//                            color = MaterialTheme.colorScheme.onSurface,
-//                            style = MaterialTheme.typography.bodySmall,
-//                            overflow = TextOverflow.Ellipsis
-//                        )
-//                    }
-//                }
-//            },
-//            supportingContent = {
-//
-//                Row {
-//                    OutlinedButton(
-//                        onClick = {
-//                            composeView.performClick()
-//                        },
-//                        contentPadding = PaddingValues(
-//                            top = 0.dp,
-//                            bottom = 0.dp,
-//                            start = 12.dp,
-//                            end = 12.dp
-//                        ),
-//                        modifier = Modifier
-//                            .padding(top = 2.dp, bottom = 2.dp)
-//                            .height(24.dp)
-//                            .fillMaxWidth()
-//                    ) {
-//                        Text(
-//                            text = "${ad.callToAction}",
-//                            style = MaterialTheme.typography.labelSmall,
-//                        )
-//                    }
-//                }
-//            },
-//            leadingContent = {
-//                Image(
-//                    painter = rememberAsyncImagePainter(model = ad.icon?.drawable),
-//                    contentDescription = ad.advertiser,
-//                    modifier = Modifier
-//                        .size(dimensionResource(R.dimen.icon_size_large))
-//                )
-//            },
-//            modifier = Modifier.fillMaxWidth()
-//        )
-//    } ?: run {
-//        // Placeholder for loading state or error state
-//        Text("Loading ad...")
-//    }
-//}
-
 @Composable
 private fun LoadAdContent(
     nativeAd: NativeAd?,
@@ -160,7 +76,6 @@ private fun LoadAdContent(
                 )
         ) {
 
-
             Image(
                 painter = rememberAsyncImagePainter(model = ad.images[0].drawable),
                 contentDescription = "",
@@ -169,18 +84,20 @@ private fun LoadAdContent(
             )
 
             Row {
-                Image(
-                    painter = rememberAsyncImagePainter(model = ad.icon?.drawable),
-                    contentDescription = ad.advertiser,
-                    contentScale = ContentScale.FillWidth,
-                    modifier = Modifier
-                        .fillMaxWidth(0.2f)
-                        .aspectRatio(1f, false)
-                )
+                ad.icon?.let { icon ->
+                    Image(
+                        painter = rememberAsyncImagePainter(model = icon.drawable),
+                        contentDescription = ad.advertiser,
+                        contentScale = ContentScale.FillWidth,
+                        modifier = Modifier
+                            .fillMaxWidth(0.2f)
+                            .aspectRatio(1f, false)
+                    )
 
-                Spacer(
-                    modifier = Modifier.fillMaxWidth(0.04f)
-                )
+                    Spacer(
+                        modifier = Modifier.fillMaxWidth(0.04f)
+                    )
+                }
 
                 Column(
                     verticalArrangement = Arrangement.SpaceEvenly,

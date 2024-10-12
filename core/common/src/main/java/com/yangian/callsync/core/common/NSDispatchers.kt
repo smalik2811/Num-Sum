@@ -1,7 +1,9 @@
 package com.yangian.callsync.core.common
 
+import androidx.annotation.Keep
 import javax.inject.Qualifier
 import kotlin.annotation.AnnotationRetention.RUNTIME
+
 
 @Qualifier
 @Retention(RUNTIME)
