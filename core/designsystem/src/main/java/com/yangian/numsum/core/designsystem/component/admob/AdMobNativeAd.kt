@@ -192,7 +192,7 @@ private fun LoadAdContent(
 
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.Top,
+                        verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Image(
@@ -211,7 +211,7 @@ private fun LoadAdContent(
                             Text(
                                 text = ad.store ?: ad.advertiser ?: "",
                                 color = MaterialTheme.colorScheme.onSurface,
-                                style = MaterialTheme.typography.bodySmall,
+                                style = MaterialTheme.typography.titleSmall,
                                 overflow = TextOverflow.Ellipsis
                             )
                         }

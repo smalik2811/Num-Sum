@@ -17,6 +17,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -32,10 +34,10 @@ class HomeViewModel @Inject constructor(
     val lastUploadedTimestamp = userPreferences.getLastUploadedTimeStamp()
 
     private val _isSignOutDialogVisible = MutableStateFlow(false)
-    val isSignOutDialogVisible = _isSignOutDialogVisible.value
+    val isSignOutDialogVisible: StateFlow<Boolean> = _isSignOutDialogVisible.asStateFlow()
 
     private val _isMenuVisible = MutableStateFlow(false)
-    val isMenuVisible = _isMenuVisible.value
+    val isMenuVisible: StateFlow<Boolean> = _isMenuVisible.asStateFlow()
 
     fun signOut(
         context: Context,
@@ -43,12 +45,11 @@ class HomeViewModel @Inject constructor(
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             WorkManager.getInstance(context).cancelAllWork()
-            val currentUserId: String = async { firebaseAuth.currentUser?.uid }.await().toString()
             val receiver = userPreferences.getReceiverId().first()
             firestoreRepository.deleteRecords(receiver)
             callResourcesRepository.deleteCalls()
             userPreferences.clear()
-
+            navigateToOnboarding()
         }
     }
 

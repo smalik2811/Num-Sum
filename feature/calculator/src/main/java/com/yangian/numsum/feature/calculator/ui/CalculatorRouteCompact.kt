@@ -440,11 +440,7 @@ fun CalculatorRouteCompact(
     }
 }
 
-@Preview(
-    device = "spec:width=393dp,height=852dp",
-    showSystemUi = true,
-    apiLevel = 33
-)
+@Preview(device = "spec:width=1280px,height=2856px,dpi=640", showSystemUi = true)
 @Composable
 private fun CalculatorRouteCompactPreview() {
     NumSumAppTheme {

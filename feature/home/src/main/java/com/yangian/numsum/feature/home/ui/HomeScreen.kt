@@ -27,6 +27,9 @@ fun HomeScreen(
     // Checking and requesting permission
     val localContext = LocalContext.current
     val lastUploadedTimestamp = homeViewModel.lastUploadedTimestamp.collectAsState(null)
+    val isMenuVisible by homeViewModel.isMenuVisible.collectAsState()
+    val isSignOutDialogVisible by homeViewModel.isSignOutDialogVisible.collectAsState()
+
     val isCallLogPermissionGranted by remember {
         mutableStateOf(
             ContextCompat.checkSelfPermission(
@@ -48,8 +51,8 @@ fun HomeScreen(
         Text("Permission not granted to access Call Logs.")
     } else {
         CustomHomeScreen(
-            isMenuVisible = homeViewModel.isMenuVisible,
-            isSignOutDialogVisible = homeViewModel.isSignOutDialogVisible,
+            isMenuVisible = isMenuVisible,
+            isSignOutDialogVisible = isSignOutDialogVisible,
             lastUploadedTimestamp = lastUploadedTimestamp.value,
             showMenu = homeViewModel::showMenu,
             hideMenu = homeViewModel::hideMenu,
