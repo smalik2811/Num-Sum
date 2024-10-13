@@ -5,7 +5,6 @@ import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -35,9 +34,6 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.Wallpapers
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import com.google.android.gms.ads.nativead.NativeAd
 import com.yangian.numsum.core.designsystem.component.CustomAlertDialog
 import com.yangian.numsum.core.designsystem.component.NumSumAppBackground
@@ -52,7 +48,6 @@ import com.yangian.numsum.core.designsystem.theme.extendedDark
 import com.yangian.numsum.core.designsystem.theme.extendedLight
 import com.yangian.numsum.feature.home.BuildConfig
 import com.yangian.numsum.feature.home.R
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -82,7 +77,7 @@ fun CustomHomeScreen(
                 loadNativeAd(context, BuildConfig.NativeAdUnitId) {
                     nativeAd = it
                 }
-                delay(20_000) // Load a new ad every 20 seconds
+                delay(30_000) // Load a new ad every 30 seconds
             }
         }
     }
@@ -125,7 +120,17 @@ fun CustomHomeScreen(
             if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 AdMobBannerExpanded()
             } else if (nativeAd != null) {
-                CallNativeAd(nativeAd!!)
+                CallNativeAd(
+                    nativeAd!!,
+                    Modifier.padding(
+                        start = dimensionResource(
+                            com.yangian.numsum.core.designsystem.R.dimen.padding_tiny
+                        ),
+                        end = dimensionResource(
+                            com.yangian.numsum.core.designsystem.R.dimen.padding_tiny
+                        )
+                    ),
+                )
             }
         },
         modifier = modifier

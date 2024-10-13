@@ -23,21 +23,25 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.android.gms.ads.nativead.NativeAd
-import com.yangian.numsum.core.designsystem.BuildConfig
 import com.yangian.numsum.core.designsystem.component.CalculatorButton
 import com.yangian.numsum.core.designsystem.component.CalculatorIconButton
-import com.yangian.numsum.core.designsystem.component.admob.AdMobBannerExpanded
 import com.yangian.numsum.core.designsystem.component.admob.CallNativeAd
 import com.yangian.numsum.core.designsystem.component.admob.loadNativeAd
 import com.yangian.numsum.core.designsystem.icon.BackspaceIcon
 import com.yangian.numsum.core.designsystem.theme.NumSumAppTheme
+import com.yangian.numsum.feature.calculator.BuildConfig
 import com.yangian.numsum.feature.calculator.CalculatorViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 
 @Composable
 fun CalculatorRouteExpanded(
@@ -46,6 +50,19 @@ fun CalculatorRouteExpanded(
 ) {
 
     val calculatorUiState by calculatorViewModel.uiState.collectAsState()
+    val context = LocalContext.current
+    var nativeAd by remember { mutableStateOf<NativeAd?>(null) }
+
+    LaunchedEffect(key1 = null) {
+        launch(Dispatchers.Main) {
+            while (isActive) { // isActive checks if the coroutine is still active
+                loadNativeAd(context, BuildConfig.NativeAdUnitId) {
+                    nativeAd = it
+                }
+                delay(30_000) // Load a new ad every 30 seconds
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -57,49 +74,72 @@ fun CalculatorRouteExpanded(
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column(
-            verticalArrangement = Arrangement.Bottom,
-            horizontalAlignment = Alignment.End,
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(3f)
                 .padding(start = 12.dp, end = 12.dp)
-                .background(
-                    color = MaterialTheme.colorScheme.surfaceVariant,
-                    shape = RoundedCornerShape(
-                        topStart = 12.dp,
-                        topEnd = 12.dp,
-                        bottomStart = 24.dp,
-                        bottomEnd = 24.dp
-                    )
-                )
         ) {
-            Text(
-                text = calculatorUiState.expression,
-                style = MaterialTheme.typography.displayLarge,
-                color = MaterialTheme.colorScheme.onSurface,
-                fontWeight = FontWeight.W500,
-                maxLines = 3,
-                textAlign = TextAlign.End,
-                modifier = Modifier
-                    .padding(
-                        bottom = 8.dp,
-                        end = 8.dp,
-                        start = 8.dp
-                    )
-            )
 
-            Text(
-                text = calculatorUiState.result,
-                style = MaterialTheme.typography.displaySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.End,
-                modifier = Modifier.padding(
-                    bottom = 8.dp,
-                    end = 24.dp
+            if (nativeAd != null) {
+                CallNativeAd(
+                    nativeAd!!,
+                    Modifier
+                        .fillMaxWidth(0.25f)
+                        .padding(
+                            start = dimensionResource(
+                                com.yangian.numsum.core.designsystem.R.dimen.padding_tiny
+                            ),
+                            end = dimensionResource(
+                                com.yangian.numsum.core.designsystem.R.dimen.padding_tiny
+                            )
+                        ),
                 )
-            )
+            }
+
+            Column(
+                verticalArrangement = Arrangement.Bottom,
+                horizontalAlignment = Alignment.End,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                    .background(
+                        color = MaterialTheme.colorScheme.surfaceVariant,
+                        shape = RoundedCornerShape(
+                            topStart = 12.dp,
+                            topEnd = 12.dp,
+                            bottomStart = 24.dp,
+                            bottomEnd = 24.dp
+                        )
+                    )
+            ) {
+                Text(
+                    text = calculatorUiState.expression,
+                    style = MaterialTheme.typography.displayLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontWeight = FontWeight.W500,
+                    maxLines = 3,
+                    textAlign = TextAlign.End,
+                    modifier = Modifier
+                        .padding(
+                            bottom = 8.dp,
+                            end = 8.dp,
+                            start = 8.dp
+                        )
+                )
+
+                Text(
+                    text = calculatorUiState.result,
+                    style = MaterialTheme.typography.displaySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.End,
+                    modifier = Modifier.padding(
+                        bottom = 8.dp,
+                        end = 24.dp
+                    )
+                )
+            }
         }
 
         Spacer(

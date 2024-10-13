@@ -11,6 +11,8 @@ import com.google.android.gms.ads.MobileAds
 import com.yangian.numsum.core.data.util.NetworkMonitor
 import com.yangian.numsum.core.designsystem.component.NumSumAppBackground
 import com.yangian.numsum.core.designsystem.theme.NumSumAppTheme
+import com.yangian.numsum.feature.calculator.navigation.CALCULATOR_ROUTE
+import com.yangian.numsum.navigation.NumSumDestination
 import com.yangian.numsum.ui.NumSumApp
 import com.yangian.numsum.ui.rememberNumSumAppState
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,7 +34,6 @@ class MainActivity : ComponentActivity() {
         installSplashScreen().setKeepOnScreenCondition {
             !mainViewModel.isSplashVisible.value
         }
-
 
         setContent {
             val startDestination by mainViewModel.startDestination
