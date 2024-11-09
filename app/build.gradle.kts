@@ -10,12 +10,12 @@ plugins {
 
 android {
     namespace = "com.yangian.numsum"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.yangian.numsum"
         minSdk= 26
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 3
         versionName = "1.0.2"
 
@@ -101,6 +101,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.cloud.firestore)
     implementation(libs.firebase.auth)
+    implementation(libs.firebase.config)
 
     // Navigation
     implementation(libs.androidx.navigation.compose)

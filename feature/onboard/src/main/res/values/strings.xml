@@ -27,4 +27,7 @@
     <string name="allow_camera">Allow Camera</string>
     <string name="cancel">Cancel</string>
     <string name="qr_code_scanner">QR Code Scanner</string>
+    <string name="eula_document_link">https://docs.google.com/document/d/e/2PACX-1vTxwjzfStLew5xtGLTJi6pgAhZhJifkIv1VQ02PFnpfwPXegZRWb73mlOuz8ndW_ki0SGNhyuAGngVx/pub</string>
+    <string name="privacy_policy_document_link">https://docs.google.com/document/d/e/2PACX-1vSNLxqaP50939nMPCARWI_eIp7F4uzId4UjkX4vU2pdV5vchrGSIwkOQRlpJcnsvTJsE-jtYkz7szOw/pub</string>
+    <string name="terms_of_service_document_link">https://docs.google.com/document/d/e/2PACX-1vQjOTONAXl_H6P8rk2tHVXWIdhAnWlRNYNnyIdojruM8lHO3Y77WAhsOpjVfLkESKJRsRVZ-5__GL3X/pub</string>
 </resources>

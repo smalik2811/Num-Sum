@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "com.yangian.numsum.core.firebase"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 26
@@ -48,6 +48,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.cloud.firestore)
     implementation(libs.firebase.auth)
+    implementation(libs.firebase.config)
 
     // test
     testImplementation(libs.junit)

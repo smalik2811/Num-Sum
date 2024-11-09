@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.yangian.numsum.core.constant"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk= 26

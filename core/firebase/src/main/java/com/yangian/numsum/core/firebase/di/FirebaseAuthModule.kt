@@ -18,7 +18,7 @@ internal object FirebaseAuthModule {
         firebase: Firebase
     ): FirebaseAuth {
         val auth = firebase.auth
-//        auth.useEmulator("10.0.0.2", 4000)
+        auth.useEmulator("10.0.0.2", 9099)
         return auth
     }
 }

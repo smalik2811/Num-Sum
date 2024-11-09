@@ -7,13 +7,13 @@ plugins {
 
 android {
     namespace = "com.yangian.numsum.core.workmanager"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 26
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        
+
     }
 
     compileOptions {
@@ -46,6 +46,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.cloud.firestore)
     implementation(libs.firebase.auth)
+    implementation(libs.firebase.config)
 
     // Work Manager
     implementation(libs.androidx.work.runtime)

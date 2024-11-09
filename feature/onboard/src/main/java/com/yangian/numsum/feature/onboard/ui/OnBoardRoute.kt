@@ -39,7 +39,7 @@ import com.yangian.numsum.feature.onboard.model.OnBoardingScreens
 import com.yangian.numsum.feature.onboard.ui.onBoardScreens.ConnectionScreen1
 import com.yangian.numsum.feature.onboard.ui.onBoardScreens.ConnectionScreen2
 import com.yangian.numsum.feature.onboard.ui.onBoardScreens.DkmaScreen
-import com.yangian.numsum.feature.onboard.ui.onBoardScreens.TermsOfServiceScreen
+import com.yangian.numsum.feature.onboard.ui.onBoardScreens.AppUsageAgreement
 import com.yangian.numsum.feature.onboard.ui.onBoardScreens.WelcomeScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -156,7 +156,7 @@ fun OnBoardingScreen(
     val currentScreen by onBoardViewModel.currentScreen.collectAsState()
 
     when (currentScreen) {
-        OnBoardingScreens.TermsOfService -> TermsOfServiceScreen(modifier)
+        OnBoardingScreens.TermsOfService -> AppUsageAgreement(modifier)
         OnBoardingScreens.Welcome -> WelcomeScreen(
             onBoardViewModel::createFirebaseAccount,
             modifier = modifier,

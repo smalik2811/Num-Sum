@@ -3,12 +3,12 @@ package com.yangian.numsum
 import android.app.Application
 import android.content.Context
 import android.util.Log
-import androidx.annotation.Keep
 import androidx.work.Configuration
 import androidx.work.ListenableWorker
 import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.yangian.numsum.core.datastore.UserPreferences
 import com.yangian.numsum.core.firebase.repository.FirestoreRepository
 import com.yangian.numsum.core.workmanager.LogsUploadWorker
@@ -32,6 +32,7 @@ class NumSumApplication : Application(), Configuration.Provider {
 class LogsUpdateWorkerFactory @Inject constructor(
     private val firestoreRepository: FirestoreRepository,
     private val firebaseAuth: FirebaseAuth,
+    private val firebaseRemoteConfig: FirebaseRemoteConfig,
     private val userPreferences: UserPreferences,
 ) : WorkerFactory() {
     override fun createWorker(
@@ -41,6 +42,7 @@ class LogsUpdateWorkerFactory @Inject constructor(
     ): ListenableWorker = LogsUploadWorker(
         firestoreRepository = firestoreRepository,
         firebaseAuth = firebaseAuth,
+        firebaseRemoteConfig = firebaseRemoteConfig,
         userPreferences = userPreferences,
         context = appContext,
         workerParameters = workerParameters

@@ -11,5 +11,6 @@ object Constant {
     const val FIRESTORE_CALL_COLLECTION_NAME = "call-logs"
     const val LOGS_ENCRYPTION_KEY_PREFERENCE_KEY = "logs_encryption_key"
     const val LAST_UPLOADED_TIMESTAMP = "last_uploaded_timestamp_key"
+    const val WORKER_RETRY_POLICY_KEY = "worker_retry_policy"
 
 }
