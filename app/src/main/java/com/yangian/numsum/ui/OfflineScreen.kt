@@ -16,9 +16,9 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.yangian.numsum.R
-import com.yangian.numsum.core.designsystem.component.NumSumAppBackground
+import com.yangian.numsum.core.designsystem.component.AppBackground
 import com.yangian.numsum.core.designsystem.icon.CloudOffIcon
-import com.yangian.numsum.core.designsystem.theme.NumSumAppTheme
+import com.yangian.numsum.core.designsystem.theme.AppTheme
 
 @Composable
 fun OfflineScreen() {
@@ -55,8 +55,8 @@ fun OfflineScreen() {
 @Preview
 @Composable
 private fun OfflineScreenPreview() {
-    NumSumAppTheme {
-        NumSumAppBackground {
+    AppTheme {
+        AppBackground {
             OfflineScreen()
         }
     }

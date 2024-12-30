@@ -19,13 +19,15 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.NumSum"
-        tools:targetApi="34">
+        android:theme="@style/Theme.NumSumSplash"
+        android:windowSoftInputMode="adjustResize"
+        android:enableOnBackInvokedCallback="true"
+        tools:targetApi="35">
 
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.NumSum">
+            android:theme="@style/Theme.NumSumSplash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

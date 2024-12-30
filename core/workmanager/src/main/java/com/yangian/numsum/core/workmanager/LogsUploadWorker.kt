@@ -38,10 +38,10 @@ class LogsUploadWorker @AssistedInject constructor(
 
         val workRequest = PeriodicWorkRequestBuilder<LogsUploadWorker>(
             repeatInterval = retryPolicy,
-            repeatIntervalTimeUnit = TimeUnit.HOURS,
+            repeatIntervalTimeUnit = TimeUnit.MINUTES,
         ).setBackoffCriteria(
             BackoffPolicy.EXPONENTIAL,
-            60,
+            2,
             TimeUnit.MINUTES,
         ).setConstraints(
             workerConstraints

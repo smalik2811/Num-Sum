@@ -18,7 +18,7 @@ internal object FirestoreModule {
         firebase: Firebase
     ): FirebaseFirestore {
         val firestore = firebase.firestore
-        firestore.useEmulator("10.0.0.2", 8080)
+//        firestore.useEmulator("10.0.0.2", 8080)
         return firestore
     }
 }

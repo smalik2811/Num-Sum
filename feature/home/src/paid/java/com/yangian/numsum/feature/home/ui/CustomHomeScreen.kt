@@ -144,13 +144,18 @@ fun CustomHomeScreen(
         },
         modifier = modifier
     ) {
+        padding
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(
-                    it
+                .padding(padding)
+                .consumeWindowInsets(padding)
+                .windowInsetsPadding(
+                    WindowInsets.safeDrawing.only(
+                        WindowInsetsSides.Horizontal,
+                    ),
                 ),
         ) {
             Icon(

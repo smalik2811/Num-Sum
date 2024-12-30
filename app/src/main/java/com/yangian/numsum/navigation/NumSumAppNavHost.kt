@@ -1,6 +1,5 @@
 package com.yangian.numsum.navigation
 
-import android.content.Context
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -13,7 +12,6 @@ import com.yangian.numsum.ui.NumSumAppState
 @Composable
 fun NumSumAppNavHost(
     appState: NumSumAppState,
-    appContext: Context,
     windowSizeClass: WindowSizeClass,
     modifier: Modifier = Modifier,
     startDestination: NumSumDestination
@@ -28,7 +26,7 @@ fun NumSumAppNavHost(
 
         calculatorScreen(
             windowSizeClass = windowSizeClass,
-            navigateToLockedScreen = {
+            navigateToOnboardingScreen = {
                 appState.navigateToDestination(startDestination)
             }
         )
@@ -38,8 +36,6 @@ fun NumSumAppNavHost(
         })
 
         onBoardScreen(
-            windowSizeClass = windowSizeClass,
-            appContext = appContext,
             navigateToCalculator = {
                 appState.navigateToDestination(NumSumDestination.Calculator)
             },

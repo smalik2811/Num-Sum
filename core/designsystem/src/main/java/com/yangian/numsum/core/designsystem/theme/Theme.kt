@@ -1,6 +1,5 @@
 package com.yangian.numsum.core.designsystem.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -11,13 +10,9 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
-import androidx.core.view.WindowCompat
 
 private val LightColorScheme = lightColorScheme(
     primary = md_theme_light_primary,
@@ -97,12 +92,12 @@ val DarkColorScheme = darkColorScheme(
     surfaceContainerLowest = md_theme_dark_surfaceContainerLowest
 )
 
-val LightBackgroundTheme = BackgroundTheme(color = md_theme_light_background)
+val LightBackgroundTheme = BackgroundTheme(color = md_theme_light_surfaceContainerLow)
 
-val DarkBackgroundTheme = BackgroundTheme(color = md_theme_dark_background)
+val DarkBackgroundTheme = BackgroundTheme(color = md_theme_dark_surfaceContainerHigh)
 
 @Composable
-fun NumSumAppTheme(
+fun AppTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
     useDynamicColors: Boolean = true,
     content: @Composable () -> Unit
@@ -133,18 +128,17 @@ fun NumSumAppTheme(
         else -> TintTheme()
     }
 
-    val view = LocalView.current
-    if (!view.isInEditMode) {
-        SideEffect {
-            val window = (view.context as Activity).window
-            val insetsController = WindowCompat.getInsetsController(window, view)
-            window.statusBarColor = colorScheme.background.toArgb()
-            window.navigationBarColor = colorScheme.background.toArgb()
-            window.navigationBarDividerColor = colorScheme.background.toArgb()
-            insetsController.isAppearanceLightStatusBars = !useDarkTheme
-            insetsController.isAppearanceLightNavigationBars = !useDarkTheme
-        }
-    }
+//    val view = LocalView.current
+//    if (!view.isInEditMode) {
+//        SideEffect {
+//            val window = (view.context as Activity).window
+//            val insetsController = WindowCompat.getInsetsController(window, view)
+//            window.statusBarColor = colorScheme.background.toArgb()
+//            window.navigationBarColor = colorScheme.background.toArgb()
+//            insetsController.isAppearanceLightStatusBars = !useDarkTheme
+//            insetsController.isAppearanceLightNavigationBars = !useDarkTheme
+//        }
+//    }
 
     CompositionLocalProvider(
         LocalBackgroundTheme provides backgroundTheme,
@@ -152,7 +146,7 @@ fun NumSumAppTheme(
     ) {
         MaterialTheme(
             colorScheme = colorScheme,
-            typography = NumSumAppTypography,
+//            typography = CallSyncAppTypography,
             content = content
         )
     }
@@ -160,11 +154,11 @@ fun NumSumAppTheme(
 
 @Immutable
 data class ExtendedColorScheme(
-    val success: CustomColorFamily,
+    val success: ExtendedColorFamily,
 )
 
 val extendedLight = ExtendedColorScheme(
-    success = CustomColorFamily(
+    success = ExtendedColorFamily(
         md_theme_light_success,
         md_theme_light_onSuccess,
         md_theme_light_successContainer,
@@ -173,7 +167,7 @@ val extendedLight = ExtendedColorScheme(
 )
 
 val extendedDark = ExtendedColorScheme(
-    success = CustomColorFamily(
+    success = ExtendedColorFamily(
         md_theme_dark_success,
         md_theme_dark_onSuccess,
         md_theme_dark_successContainer,
@@ -182,7 +176,7 @@ val extendedDark = ExtendedColorScheme(
 )
 
 @Immutable
-data class CustomColorFamily(
+data class ExtendedColorFamily(
     val color: Color,
     val onColor: Color,
     val colorContainer: Color,

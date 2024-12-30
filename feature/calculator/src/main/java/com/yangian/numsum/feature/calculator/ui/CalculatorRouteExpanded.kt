@@ -3,13 +3,22 @@ package com.yangian.numsum.feature.calculator.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContent
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -35,7 +44,7 @@ import com.yangian.numsum.core.designsystem.component.CalculatorIconButton
 import com.yangian.numsum.core.designsystem.component.admob.CallNativeAd
 import com.yangian.numsum.core.designsystem.component.admob.loadNativeAd
 import com.yangian.numsum.core.designsystem.icon.BackspaceIcon
-import com.yangian.numsum.core.designsystem.theme.NumSumAppTheme
+import com.yangian.numsum.core.designsystem.theme.AppTheme
 import com.yangian.numsum.feature.calculator.BuildConfig
 import com.yangian.numsum.feature.calculator.CalculatorViewModel
 import kotlinx.coroutines.Dispatchers
@@ -64,17 +73,24 @@ fun CalculatorRouteExpanded(
         }
     }
 
+    if (calculatorUiState.appUnlocked) {
+        calculatorViewModel.clearCalculator()
+        navigateToLockedScreen()
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(
                 color = MaterialTheme.colorScheme.background,
             )
-            .padding(bottom = 12.dp),
+            .consumeWindowInsets(PaddingValues(12.dp))
+            .windowInsetsPadding(WindowInsets.statusBars),
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
+            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(3f)
@@ -85,7 +101,8 @@ fun CalculatorRouteExpanded(
                 CallNativeAd(
                     nativeAd!!,
                     Modifier
-                        .fillMaxWidth(0.25f)
+                        .fillMaxHeight()
+                        .weight(4f)
                         .padding(
                             start = dimensionResource(
                                 com.yangian.numsum.core.designsystem.R.dimen.padding_tiny
@@ -101,7 +118,7 @@ fun CalculatorRouteExpanded(
                 verticalArrangement = Arrangement.Bottom,
                 horizontalAlignment = Alignment.End,
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .weight(6f)
                     .fillMaxHeight()
                     .background(
                         color = MaterialTheme.colorScheme.surfaceVariant,
@@ -163,7 +180,7 @@ fun CalculatorRouteExpanded(
                 backgroundColor = MaterialTheme.colorScheme.surfaceContainer,
                 contentColor = MaterialTheme.colorScheme.onSurface,
                 onClick = {
-                    if (calculatorUiState.length < 20) {
+                    if (calculatorUiState.length < 60) {
                         calculatorViewModel.appendNumber('7')
                         calculatorViewModel.evaluateExpressionCompact()
                     }
@@ -178,7 +195,7 @@ fun CalculatorRouteExpanded(
                 backgroundColor = MaterialTheme.colorScheme.surfaceContainer,
                 contentColor = MaterialTheme.colorScheme.onSurface,
                 onClick = {
-                    if (calculatorUiState.length < 20) {
+                    if (calculatorUiState.length < 60) {
                         calculatorViewModel.appendNumber('8')
                         calculatorViewModel.evaluateExpressionCompact()
                     }
@@ -193,7 +210,7 @@ fun CalculatorRouteExpanded(
                 backgroundColor = MaterialTheme.colorScheme.surfaceContainer,
                 contentColor = MaterialTheme.colorScheme.onSurface,
                 onClick = {
-                    if (calculatorUiState.length < 20) {
+                    if (calculatorUiState.length < 60) {
                         calculatorViewModel.appendNumber('9')
                         calculatorViewModel.evaluateExpressionCompact()
                     }
@@ -208,7 +225,7 @@ fun CalculatorRouteExpanded(
                 backgroundColor = MaterialTheme.colorScheme.primaryContainer,
                 contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                 onClick = {
-                    if (calculatorUiState.length < 20) {
+                    if (calculatorUiState.length < 60) {
                         calculatorViewModel.appendOperator('÷')
                         calculatorViewModel.evaluateExpressionCompact()
                     }
@@ -241,7 +258,7 @@ fun CalculatorRouteExpanded(
                 backgroundColor = MaterialTheme.colorScheme.surfaceContainer,
                 contentColor = MaterialTheme.colorScheme.onSurface,
                 onClick = {
-                    if (calculatorUiState.length < 20) {
+                    if (calculatorUiState.length < 60) {
                         calculatorViewModel.appendNumber('4')
                         calculatorViewModel.evaluateExpressionCompact()
                     }
@@ -256,7 +273,7 @@ fun CalculatorRouteExpanded(
                 backgroundColor = MaterialTheme.colorScheme.surfaceContainer,
                 contentColor = MaterialTheme.colorScheme.onSurface,
                 onClick = {
-                    if (calculatorUiState.length < 20) {
+                    if (calculatorUiState.length < 60) {
                         calculatorViewModel.appendNumber('5')
                         calculatorViewModel.evaluateExpressionCompact()
                     }
@@ -271,7 +288,7 @@ fun CalculatorRouteExpanded(
                 backgroundColor = MaterialTheme.colorScheme.surfaceContainer,
                 contentColor = MaterialTheme.colorScheme.onSurface,
                 onClick = {
-                    if (calculatorUiState.length < 20) {
+                    if (calculatorUiState.length < 60) {
                         calculatorViewModel.appendNumber('6')
                         calculatorViewModel.evaluateExpressionCompact()
                     }
@@ -286,7 +303,7 @@ fun CalculatorRouteExpanded(
                 backgroundColor = MaterialTheme.colorScheme.primaryContainer,
                 contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                 onClick = {
-                    if (calculatorUiState.length < 20) {
+                    if (calculatorUiState.length < 60) {
                         calculatorViewModel.appendOperator('×')
                         calculatorViewModel.evaluateExpressionCompact()
                     }
@@ -301,7 +318,7 @@ fun CalculatorRouteExpanded(
                 backgroundColor = MaterialTheme.colorScheme.primaryContainer,
                 contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                 onClick = {
-                    if (calculatorUiState.length < 20) {
+                    if (calculatorUiState.length < 60) {
                         calculatorViewModel.appendParenthesis()
                         calculatorViewModel.evaluateExpressionCompact()
                     }
@@ -324,7 +341,7 @@ fun CalculatorRouteExpanded(
                 backgroundColor = MaterialTheme.colorScheme.surfaceContainer,
                 contentColor = MaterialTheme.colorScheme.onSurface,
                 onClick = {
-                    if (calculatorUiState.length < 20) {
+                    if (calculatorUiState.length < 60) {
                         calculatorViewModel.appendNumber('1')
                         calculatorViewModel.evaluateExpressionCompact()
                     }
@@ -339,7 +356,7 @@ fun CalculatorRouteExpanded(
                 backgroundColor = MaterialTheme.colorScheme.surfaceContainer,
                 contentColor = MaterialTheme.colorScheme.onSurface,
                 onClick = {
-                    if (calculatorUiState.length < 20) {
+                    if (calculatorUiState.length < 60) {
                         calculatorViewModel.appendNumber('2')
                         calculatorViewModel.evaluateExpressionCompact()
                     }
@@ -354,7 +371,7 @@ fun CalculatorRouteExpanded(
                 backgroundColor = MaterialTheme.colorScheme.surfaceContainer,
                 contentColor = MaterialTheme.colorScheme.onSurface,
                 onClick = {
-                    if (calculatorUiState.length < 20) {
+                    if (calculatorUiState.length < 60) {
                         calculatorViewModel.appendNumber('3')
                         calculatorViewModel.evaluateExpressionCompact()
                     }
@@ -369,7 +386,7 @@ fun CalculatorRouteExpanded(
                 backgroundColor = MaterialTheme.colorScheme.primaryContainer,
                 contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                 onClick = {
-                    if (calculatorUiState.length < 20) {
+                    if (calculatorUiState.length < 60) {
                         calculatorViewModel.appendOperator('-')
                         calculatorViewModel.evaluateExpressionCompact()
                     }
@@ -384,7 +401,7 @@ fun CalculatorRouteExpanded(
                 backgroundColor = MaterialTheme.colorScheme.primaryContainer,
                 contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                 onClick = {
-                    if (calculatorUiState.length < 20) {
+                    if (calculatorUiState.length < 60) {
                         calculatorViewModel.appendOperator('%')
                         calculatorViewModel.evaluateExpressionCompact()
                     }
@@ -407,7 +424,7 @@ fun CalculatorRouteExpanded(
                 backgroundColor = MaterialTheme.colorScheme.surfaceContainer,
                 contentColor = MaterialTheme.colorScheme.onSurface,
                 onClick = {
-                    if (calculatorUiState.length < 20) {
+                    if (calculatorUiState.length < 60) {
                         calculatorViewModel.appendNumber('0')
                         calculatorViewModel.evaluateExpressionCompact()
                     }
@@ -422,7 +439,7 @@ fun CalculatorRouteExpanded(
                 backgroundColor = MaterialTheme.colorScheme.surfaceContainer,
                 contentColor = MaterialTheme.colorScheme.onSurface,
                 onClick = {
-                    if (calculatorUiState.length < 20) {
+                    if (calculatorUiState.length < 60) {
                         calculatorViewModel.appendDecimal()
                         calculatorViewModel.evaluateExpressionCompact()
                     }
@@ -451,7 +468,7 @@ fun CalculatorRouteExpanded(
                 backgroundColor = MaterialTheme.colorScheme.primaryContainer,
                 contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                 onClick = {
-                    if (calculatorUiState.length < 20) {
+                    if (calculatorUiState.length < 60) {
                         calculatorViewModel.appendOperator('+')
                         calculatorViewModel.evaluateExpressionCompact()
                     }
@@ -468,9 +485,6 @@ fun CalculatorRouteExpanded(
                 onClick = {
                     calculatorViewModel.evaluateExpressionCompact()
                     calculatorViewModel.prepareResult()
-                    if (calculatorUiState.appUnlocked) {
-                        navigateToLockedScreen()
-                    }
                 }
             )
         }
@@ -483,7 +497,7 @@ fun CalculatorRouteExpanded(
 )
 @Composable
 private fun CalculatorRouteExpandedPreview() {
-    NumSumAppTheme {
+    AppTheme {
         CalculatorRouteExpanded(
             navigateToLockedScreen = {}
         )

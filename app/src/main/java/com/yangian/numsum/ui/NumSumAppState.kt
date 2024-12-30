@@ -51,9 +51,19 @@ class NumSumAppState(
 
     fun navigateToDestination(destination: NumSumDestination) {
         when (destination) {
-            NumSumDestination.Calculator -> navController.navigate(NumSumDestination.Calculator.route)
+            NumSumDestination.Calculator -> navController.navigate(NumSumDestination.Calculator.route) {
+                popUpTo(NumSumDestination.Calculator.route) {
+                    inclusive = true
+                }
+            }
             NumSumDestination.OnBoard -> {navController.navigate(NumSumDestination.OnBoard.route)}
-            NumSumDestination.Home -> {navController.navigate(NumSumDestination.Home.route)}
+            NumSumDestination.Home -> {
+                navController.navigate(NumSumDestination.Home.route) {
+                    popUpTo(NumSumDestination.OnBoard.route) {
+                        inclusive = true
+                    }
+                }
+            }
         }
     }
 

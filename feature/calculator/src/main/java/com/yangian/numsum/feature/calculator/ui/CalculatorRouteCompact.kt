@@ -3,13 +3,22 @@ package com.yangian.numsum.feature.calculator.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContent
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -27,7 +36,7 @@ import com.yangian.numsum.core.designsystem.component.CalculatorButton
 import com.yangian.numsum.core.designsystem.component.CalculatorIconButton
 import com.yangian.numsum.core.designsystem.component.admob.AdMobBannerCompact
 import com.yangian.numsum.core.designsystem.icon.BackspaceIcon
-import com.yangian.numsum.core.designsystem.theme.NumSumAppTheme
+import com.yangian.numsum.core.designsystem.theme.AppTheme
 import com.yangian.numsum.feature.calculator.CalculatorViewModel
 
 @Composable
@@ -39,6 +48,7 @@ fun CalculatorRouteCompact(
     val calculatorUiState by calculatorViewModel.uiState.collectAsState()
 
     if (calculatorUiState.appUnlocked) {
+        calculatorViewModel.clearCalculator()
         navigateToLockedScreen()
     }
 
@@ -48,7 +58,8 @@ fun CalculatorRouteCompact(
             .background(
                 color = MaterialTheme.colorScheme.background,
             )
-            .padding(12.dp),
+            .consumeWindowInsets(PaddingValues(12.dp))
+            .windowInsetsPadding(WindowInsets.statusBars),
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -443,7 +454,7 @@ fun CalculatorRouteCompact(
 @Preview(device = "spec:width=1280px,height=2856px,dpi=640", showSystemUi = true)
 @Composable
 private fun CalculatorRouteCompactPreview() {
-    NumSumAppTheme {
+    AppTheme {
         CalculatorRouteCompact(
             navigateToLockedScreen = {}
         )

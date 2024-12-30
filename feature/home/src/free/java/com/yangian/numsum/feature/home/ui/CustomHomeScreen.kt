@@ -7,10 +7,18 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -35,15 +43,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.Wallpapers
 import com.google.android.gms.ads.nativead.NativeAd
+import com.yangian.numsum.core.designsystem.component.AppBackground
 import com.yangian.numsum.core.designsystem.component.CustomAlertDialog
-import com.yangian.numsum.core.designsystem.component.NumSumAppBackground
 import com.yangian.numsum.core.designsystem.component.admob.AdMobBannerExpanded
 import com.yangian.numsum.core.designsystem.component.admob.CallNativeAd
 import com.yangian.numsum.core.designsystem.component.admob.loadNativeAd
 import com.yangian.numsum.core.designsystem.icon.CheckCircleIcon
 import com.yangian.numsum.core.designsystem.icon.LogoutIcon
 import com.yangian.numsum.core.designsystem.icon.MoreVertIcon
-import com.yangian.numsum.core.designsystem.theme.NumSumAppTheme
+import com.yangian.numsum.core.designsystem.theme.AppTheme
 import com.yangian.numsum.core.designsystem.theme.extendedDark
 import com.yangian.numsum.core.designsystem.theme.extendedLight
 import com.yangian.numsum.feature.home.BuildConfig
@@ -122,26 +130,33 @@ fun CustomHomeScreen(
             } else if (nativeAd != null) {
                 CallNativeAd(
                     nativeAd!!,
-                    Modifier.padding(
-                        start = dimensionResource(
-                            com.yangian.numsum.core.designsystem.R.dimen.padding_tiny
-                        ),
-                        end = dimensionResource(
-                            com.yangian.numsum.core.designsystem.R.dimen.padding_tiny
+                    Modifier
+                        .padding(
+                            start = dimensionResource(
+                                com.yangian.numsum.core.designsystem.R.dimen.padding_tiny
+                            ),
+                            end = dimensionResource(
+                                com.yangian.numsum.core.designsystem.R.dimen.padding_tiny
+                            )
                         )
-                    ),
+                        .fillMaxHeight(0.4f)
+                        .fillMaxWidth(0.5f),
                 )
             }
         },
         modifier = modifier
-    ) {
+    ) { padding ->
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(
-                    it
+                .padding(padding)
+                .consumeWindowInsets(padding)
+                .windowInsetsPadding(
+                    WindowInsets.safeDrawing.only(
+                        WindowInsetsSides.Horizontal,
+                    ),
                 ),
         ) {
             Icon(
@@ -208,8 +223,8 @@ fun CustomHomeScreen(
 @Preview(wallpaper = Wallpapers.GREEN_DOMINATED_EXAMPLE, device = "id:pixel_8_pro")
 @Composable
 private fun CallLogsDisplayPreview() {
-    NumSumAppTheme {
-        NumSumAppBackground {
+    AppTheme {
+        AppBackground {
             CustomHomeScreen(
                 isMenuVisible = false,
                 isSignOutDialogVisible = false,

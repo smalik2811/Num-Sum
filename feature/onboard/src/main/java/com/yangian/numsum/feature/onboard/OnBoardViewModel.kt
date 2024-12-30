@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.BackoffPolicy
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
@@ -29,6 +30,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import qrcode.QRCode
 import java.util.concurrent.TimeUnit
@@ -48,7 +50,7 @@ sealed interface HandShakeUI {
     data object Loading : HandShakeUI
     data object Error : HandShakeUI
     data class Success(
-        val qrCode: ImageBitmap
+        val encryptedHandShakeString: String
     ) : HandShakeUI
 }
 
@@ -62,13 +64,12 @@ class OnBoardViewModel @Inject constructor(
 
     // UI
     private val _currentScreen =
-        MutableStateFlow(OnBoardingScreens.TermsOfService)
+        MutableStateFlow(OnBoardingScreens.Welcome)
     val currentScreen: StateFlow<OnBoardingScreens> = _currentScreen
 
     fun navigateToNextScreen() {
         viewModelScope.launch {
             when (_currentScreen.value) {
-                OnBoardingScreens.TermsOfService -> _currentScreen.value = OnBoardingScreens.Welcome
                 OnBoardingScreens.Welcome -> _currentScreen.value = OnBoardingScreens.DkmaScreen
                 OnBoardingScreens.DkmaScreen -> _currentScreen.value = OnBoardingScreens.Connection1
                 OnBoardingScreens.Connection1 -> _currentScreen.value =
@@ -82,8 +83,7 @@ class OnBoardViewModel @Inject constructor(
     fun navigateToPreviousScreen() {
         viewModelScope.launch {
             when (_currentScreen.value) {
-                OnBoardingScreens.TermsOfService -> {}
-                OnBoardingScreens.Welcome -> _currentScreen.value = OnBoardingScreens.TermsOfService
+                OnBoardingScreens.Welcome -> {}
                 OnBoardingScreens.DkmaScreen -> _currentScreen.value = OnBoardingScreens.Welcome
                 OnBoardingScreens.Connection1 -> _currentScreen.value = OnBoardingScreens.DkmaScreen
                 OnBoardingScreens.Connection2 -> _currentScreen.value =
@@ -192,58 +192,58 @@ class OnBoardViewModel @Inject constructor(
         handShakeUIState = HandShakeUI.Cold
     }
 
-    fun prepareQrCode(
-        backgroundColor: Int,
-        foregroundColor: Int
-    ) {
+    fun prepareQrCode() {
         handShakeUIState = HandShakeUI.Loading
         Log.i("GM", "HandShakeUIState changed to Loading.")
         viewModelScope.launch {
             try {
                 val encryptedHandShakeString = getEncryptedHandShakeString()
                 Log.i("GM", "EncryptedHandShakeString fetched.")
-                val qrCode = getQrCode(backgroundColor, foregroundColor, encryptedHandShakeString)
-                Log.i("GM", "QR code generated, handshake ui state changed to Success.")
-                handShakeUIState = HandShakeUI.Success(qrCode)
+                handShakeUIState = HandShakeUI.Success(encryptedHandShakeString)
             } catch (exception: Exception) {
                 handShakeUIState = HandShakeUI.Error
             }
         }
     }
 
-    private fun getQrCode(
-        backgroundColor: Int,
-        foregroundColor: Int,
-        handShakeEncryptedString: String
-    ): ImageBitmap {
+    fun getQrCode(data: String, backgroundColor: Int, foregroundColor: Int): ImageBitmap {
         val byteArray: ByteArray = QRCode
             .ofSquares()
             .withBackgroundColor(backgroundColor)
             .withColor(foregroundColor)
-            .build(handShakeEncryptedString)
+            .build(data)
             .renderToBytes()
 
-        return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size).asImageBitmap()
+        return BitmapFactory
+            .decodeByteArray(byteArray, 0, byteArray.size).asImageBitmap()
     }
 
     private fun registerLogsUploadWorkRequest(context: Context) {
-        val workerConstraints = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.CONNECTED)
-            .build()
+        viewModelScope.launch(Dispatchers.IO) {
+            val existingWorkPolicy = userPreferences.getWorkerRetryPolicy().first()
 
-        val workRequest = PeriodicWorkRequestBuilder<LogsUploadWorker>(
-            repeatInterval = 6,
-            repeatIntervalTimeUnit = TimeUnit.HOURS
-        ).setConstraints(workerConstraints)
-            .build()
+            val workerConstraints = Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build()
 
-        val workManager = WorkManager.getInstance(context)
+            val workRequest = PeriodicWorkRequestBuilder<LogsUploadWorker>(
+                repeatInterval = existingWorkPolicy,
+                repeatIntervalTimeUnit = TimeUnit.MINUTES
+            ).setBackoffCriteria(
+                BackoffPolicy.EXPONENTIAL,
+                2,
+                TimeUnit.MINUTES,
+            ).setConstraints(workerConstraints)
+                .build()
 
-        workManager.enqueueUniquePeriodicWork(
-            "LOGS_UPLOAD_WORKER",
-            ExistingPeriodicWorkPolicy.UPDATE,
-            workRequest
-        )
+            val workManager = WorkManager.getInstance(context)
+
+            workManager.enqueueUniquePeriodicWork(
+                "LOGS_UPLOAD_WORKER",
+                ExistingPeriodicWorkPolicy.UPDATE,
+                workRequest
+            )
+        }
     }
 
     fun validateReceiver(
@@ -274,7 +274,6 @@ class OnBoardViewModel @Inject constructor(
             navigateToHome()
         }
     }
-
 
     init {
         loadDkmaManufacturer()

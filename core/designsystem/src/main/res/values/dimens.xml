@@ -13,6 +13,15 @@
     <dimen name="corner_radius_large">16dp</dimen>
     <dimen name="corner_radius_extra_large">24dp</dimen>
 
+    <!-- Elevations -->
+    <dimen name="elevation_level_0">0dp</dimen>
+    <dimen name="elevation_level_1">2dp</dimen>
+    <dimen name="elevation_level_2">4dp</dimen>
+    <dimen name="elevation_level_3">8dp</dimen>
+    <dimen name="elevation_level_4">12dp</dimen>
+    <dimen name="elevation_level_5">16dp</dimen>
+    <dimen name="elevation_level_6">24dp</dimen>
+
     <!-- Other Dimensions -->
     <dimen name="icon_size_small">24dp</dimen>
     <dimen name="icon_size_medium">32dp</dimen>

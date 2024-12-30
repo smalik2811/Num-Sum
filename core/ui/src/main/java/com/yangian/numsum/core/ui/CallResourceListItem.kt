@@ -28,7 +28,7 @@ import com.yangian.numsum.core.designsystem.icon.PhoneDisabledIcon
 import com.yangian.numsum.core.designsystem.icon.PhoneMissedIcon
 import com.yangian.numsum.core.designsystem.icon.VoicemailIcon
 import com.yangian.numsum.core.designsystem.icon.WifiCallingIcon
-import com.yangian.numsum.core.designsystem.theme.NumSumAppTheme
+import com.yangian.numsum.core.designsystem.theme.AppTheme
 import com.yangian.numsum.core.designsystem.theme.extendedDark
 import com.yangian.numsum.core.designsystem.theme.extendedLight
 import com.yangian.numsum.core.model.CallResource
@@ -165,7 +165,7 @@ fun CallResourceListItem(
 
 @Composable
 private fun CallResourceListItemPreview() {
-    NumSumAppTheme {
+    AppTheme {
         Surface(
             color = MaterialTheme.colorScheme.background,
             modifier = Modifier

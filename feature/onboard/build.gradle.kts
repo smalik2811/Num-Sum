@@ -50,6 +50,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3.window.size)
+    implementation(libs.androidx.window)
 
     // Hilt
     implementation(libs.androidx.hilt.navigation)
@@ -57,6 +58,7 @@ dependencies {
     // Dagger-Hilt
     implementation(libs.dagger.hilt.android)
     implementation(project(":core:model"))
+    implementation(libs.androidx.adaptive.android)
     ksp(libs.dagger.hilt.compiler)
 
     // Lifecycle

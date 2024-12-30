@@ -7,25 +7,26 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -36,11 +37,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.window.core.layout.WindowWidthSizeClass
+import com.yangian.numsum.core.designsystem.MultiDevicePreview
 import com.yangian.numsum.core.designsystem.R
-import com.yangian.numsum.core.designsystem.theme.NumSumAppTheme
+import com.yangian.numsum.core.designsystem.theme.AppTheme
 import com.yangian.numsum.core.network.model.DkmaManufacturer
 
 @SuppressLint("SetJavaScriptEnabled")
@@ -52,12 +54,14 @@ fun DkmaScreenWebViewCard(
     alterVisibility: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val prefixHTMLCode: String = stringResource(R.string.prefix_html_code)
-    val suffixHTMLCode: String = stringResource(R.string.suffix_html_code)
+    val htmlCode: String = stringResource(
+        R.string.html_boiler_plate,
+        webViewHtmlContent
+    )
 
     OutlinedCard(
         modifier = modifier,
-        shape = ShapeDefaults.ExtraLarge
+        shape = ShapeDefaults.Medium
     ) {
         Column(
             modifier = Modifier
@@ -77,25 +81,31 @@ fun DkmaScreenWebViewCard(
                 Text(
                     text = headingText,
                     style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.weight(0.8f),
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
 
                 Spacer(
-                    modifier = Modifier.weight(0.02f)
+                    modifier = Modifier.weight(1f)
                 )
 
-                Icon(
-                    imageVector = when (isVisible) {
-                        false -> Icons.Filled.ExpandMore
-                        true -> Icons.Filled.ExpandLess
-                    },
-                    contentDescription = when (isVisible) {
-                        true -> stringResource(R.string.hide)
-                        false -> stringResource(R.string.show)
-                    },
-                    modifier = Modifier
-                        .weight(0.1f),
-                )
+                IconButton(
+                    onClick = alterVisibility,
+                    colors = IconButtonDefaults.iconButtonColors().copy(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
+                    )
+                ) {
+                    Icon(
+                        imageVector = when (isVisible) {
+                            false -> Icons.Filled.ExpandMore
+                            true -> Icons.Filled.ExpandLess
+                        },
+                        contentDescription = when (isVisible) {
+                            true -> stringResource(R.string.hide)
+                            false -> stringResource(R.string.show)
+                        },
+                    )
+                }
             }
 
             AnimatedVisibility(isVisible) {
@@ -105,22 +115,191 @@ fun DkmaScreenWebViewCard(
                         WebView(context).apply {
                             settings.javaScriptEnabled = true
                             settings.domStorageEnabled = true
-
                             loadData(
-                                prefixHTMLCode + webViewHtmlContent + suffixHTMLCode,
+                                htmlCode,
                                 "text/html",
                                 "Utf-8"
                             )
                         }
                     },
-                    modifier = Modifier.wrapContentWidth()
                 )
             }
         }
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun CompactDkmaView(
+    dkmaManufacturer: DkmaManufacturer,
+    isIssueVisible: Boolean,
+    isSolutionVisible: Boolean,
+    alterIssueVisibility: () -> Unit,
+    alterSolutionVisibility: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val localPaddingValue = (dimensionResource(R.dimen.padding_medium))
+
+    OutlinedCard(
+        modifier = modifier
+    ) {
+
+        Text(
+            text = stringResource(R.string.potential_issues),
+            style = MaterialTheme.typography.headlineLarge,
+            modifier = Modifier.padding(
+                start = localPaddingValue,
+                top = localPaddingValue,
+                end = localPaddingValue
+            )
+        )
+
+        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_tiny)))
+
+        Text(
+            text = stringResource(R.string.potential_issues_description),
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.padding(
+                start = localPaddingValue,
+                end = localPaddingValue
+            )
+        )
+
+        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_large)))
+
+        DkmaScreenWebViewCard(
+            headingText = stringResource(R.string.check_issues),
+            webViewHtmlContent = dkmaManufacturer.explanation,
+            isVisible = isIssueVisible,
+            alterVisibility = alterIssueVisibility,
+            modifier = modifier.padding(
+                start = localPaddingValue,
+                end = localPaddingValue,
+                bottom = localPaddingValue
+            )
+        )
+    }
+
+    Spacer(
+        modifier = Modifier.height(dimensionResource(R.dimen.padding_extra_large))
+    )
+
+    OutlinedCard(
+        modifier = modifier
+    ) {
+
+        Text(
+            text = stringResource(R.string.potential_solutions),
+            style = MaterialTheme.typography.headlineLarge,
+            modifier = Modifier
+                .padding(
+                    start = localPaddingValue,
+                    end = localPaddingValue,
+                    top = localPaddingValue
+                )
+        )
+
+        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_tiny)))
+
+        Text(
+            text = stringResource(R.string.potential_solutions_description),
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.padding(
+                start = localPaddingValue,
+                end = localPaddingValue
+            )
+        )
+
+        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_medium)))
+
+        DkmaScreenWebViewCard(
+            headingText = stringResource(R.string.check_solutions),
+            webViewHtmlContent = dkmaManufacturer.user_solution,
+            isVisible = isSolutionVisible,
+            alterVisibility = alterSolutionVisibility,
+            modifier = modifier.padding(
+                start = localPaddingValue,
+                end = localPaddingValue,
+                bottom = localPaddingValue
+            )
+        )
+    }
+}
+
+@Composable
+fun RowScope.ExpandedDkmaView(
+    dkmaManufacturer: DkmaManufacturer,
+    isIssueVisible: Boolean,
+    isSolutionVisible: Boolean,
+    alterIssueVisibility: () -> Unit,
+    alterSolutionVisibility: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    OutlinedCard(
+        modifier = modifier.weight(1f)
+    ) {
+
+        Column(
+            modifier = Modifier
+                .padding(dimensionResource(R.dimen.padding_medium))
+        ) {
+
+            Text(
+                text = stringResource(R.string.potential_issues),
+                style = MaterialTheme.typography.headlineLarge,
+            )
+
+            Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_tiny)))
+
+            Text(
+                text = stringResource(R.string.potential_issues_description),
+                style = MaterialTheme.typography.bodyLarge,
+            )
+
+            Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_medium)))
+
+            DkmaScreenWebViewCard(
+                headingText = stringResource(R.string.check_issues),
+                webViewHtmlContent = dkmaManufacturer.explanation,
+                isVisible = isIssueVisible,
+                alterVisibility = alterIssueVisibility
+            )
+        }
+    }
+
+    Spacer(
+        modifier = Modifier.width(dimensionResource(R.dimen.padding_extra_large))
+    )
+
+    OutlinedCard(
+        modifier = modifier.weight(1f)
+    ) {
+
+        Column(modifier = Modifier.padding(dimensionResource(R.dimen.padding_small))) {
+
+            Text(
+                text = stringResource(R.string.potential_solutions),
+                style = MaterialTheme.typography.headlineLarge,
+            )
+
+            Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_tiny)))
+
+            Text(
+                text = stringResource(R.string.potential_solutions_description),
+                style = MaterialTheme.typography.bodyLarge,
+            )
+
+            Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_medium)))
+
+            DkmaScreenWebViewCard(
+                headingText = stringResource(R.string.check_solutions),
+                webViewHtmlContent = dkmaManufacturer.user_solution,
+                isVisible = isSolutionVisible,
+                alterVisibility = alterSolutionVisibility
+            )
+        }
+    }
+}
+
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun DkmaView(
@@ -132,74 +311,43 @@ fun DkmaView(
     modifier: Modifier = Modifier
 ) {
 
-    Column(
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.Start,
-        modifier = modifier
-            .padding(dimensionResource(R.dimen.padding_small))
-            .verticalScroll(rememberScrollState())
-    ) {
-
-        OutlinedCard {
-            Column(modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))) {
-
-                Text(
-                    text = stringResource(R.string.potential_issues),
-                    style = MaterialTheme.typography.headlineLarge,
-                )
-
-                Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_tiny)))
-
-                Text(
-                    text = stringResource(R.string.potential_issues_description),
-                    style = MaterialTheme.typography.bodyLarge,
-                )
-
-                Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_medium)))
-
-                DkmaScreenWebViewCard(
-                    headingText = stringResource(R.string.check_issues),
-                    webViewHtmlContent = dkmaManufacturer.explanation,
-                    isVisible = isIssueVisible,
-                    alterVisibility = alterIssueVisibility
+    val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
+    when (windowSizeClass.windowWidthSizeClass) {
+        WindowWidthSizeClass.EXPANDED -> {
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = modifier
+            ) {
+                ExpandedDkmaView(
+                    dkmaManufacturer,
+                    isIssueVisible,
+                    isSolutionVisible,
+                    alterIssueVisibility,
+                    alterSolutionVisibility,
                 )
             }
         }
 
-        Spacer(
-            modifier = Modifier.height(dimensionResource(R.dimen.padding_medium))
-        )
-
-        OutlinedCard {
-
-            Column(modifier = Modifier.padding(dimensionResource(R.dimen.padding_small))) {
-
-                Text(
-                    text = stringResource(R.string.potential_solutions),
-                    style = MaterialTheme.typography.headlineLarge,
-                )
-
-                Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_tiny)))
-
-                Text(
-                    text = stringResource(R.string.potential_solutions_description),
-                    style = MaterialTheme.typography.bodyLarge,
-                )
-
-                Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_medium)))
-
-                DkmaScreenWebViewCard(
-                    stringResource(R.string.check_solutions),
-                    dkmaManufacturer.user_solution,
+        else -> {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Top,
+                modifier = modifier
+            ) {
+                CompactDkmaView(
+                    dkmaManufacturer,
+                    isIssueVisible,
                     isSolutionVisible,
-                    alterSolutionVisibility
+                    alterIssueVisibility,
+                    alterSolutionVisibility,
                 )
             }
         }
     }
 }
 
-@Preview
+@MultiDevicePreview
 @Composable
 private fun DkmaViewPreview() {
     val mockData = DkmaManufacturer(
@@ -210,7 +358,7 @@ private fun DkmaViewPreview() {
     var isIssueVisible by remember { mutableStateOf(false) }
     var isSolutionVisible by remember { mutableStateOf(false) }
 
-    NumSumAppTheme {
+    AppTheme {
         Surface(
             modifier = Modifier
                 .fillMaxSize()

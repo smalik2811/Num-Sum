@@ -11,7 +11,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import com.yangian.numsum.core.designsystem.icon.ErrorIcon
 import com.yangian.numsum.core.designsystem.icon.LogoutIcon
-import com.yangian.numsum.core.designsystem.theme.NumSumAppTheme
+import com.yangian.numsum.core.designsystem.theme.AppTheme
 
 @Composable
 fun CustomAlertDialog(
@@ -100,8 +100,8 @@ fun CustomAlertDialog(
 @Preview
 @Composable
 private fun CustomAlertDialogPreview() {
-    NumSumAppTheme {
-        NumSumAppBackground {
+    AppTheme {
+        AppBackground {
             CustomAlertDialog(
                 onDismissRequest = { },
                 onPositiveButtonClick = { },

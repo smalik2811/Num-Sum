@@ -1,11 +1,14 @@
 package com.yangian.numsum.core.designsystem
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import androidx.core.content.ContextCompat
 
 fun Context.isPermissionGranted(permission: String): Boolean {
@@ -15,21 +18,16 @@ fun Context.isPermissionGranted(permission: String): Boolean {
     ) == PackageManager.PERMISSION_GRANTED
 }
 
-inline fun Context.cameraPermissionRequest(crossinline positive: () -> Unit) {
-    AlertDialog.Builder(this)
-        .setTitle("Camera Permission Required")
-        .setMessage("This app need the camera to establish connection with Call Sync App")
-        .setPositiveButton("Allow Camera") { dialog, which ->
-            positive.invoke()
-        }.setNegativeButton("Cancel") { ialog, which ->
-
-        }.show()
+fun Context.isPermissionDeniedPermanently(permission: String): Boolean {
+    return shouldShowRequestPermissionRationale(this as Activity, permission)
 }
 
 fun Context.openPermissionSetting() {
     Intent(ACTION_APPLICATION_DETAILS_SETTINGS).also {
-        val uri: Uri = Uri.fromParts("package", packageName, null)
-        it.data = uri
+        it.data = Uri.fromParts("package", packageName, null)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
         startActivity(it)
     }
 }

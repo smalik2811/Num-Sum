@@ -31,7 +31,7 @@ import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
 import com.yangian.numsum.core.designsystem.R
-import com.yangian.numsum.core.designsystem.theme.NumSumAppTheme
+import com.yangian.numsum.core.designsystem.theme.AppTheme
 import java.util.concurrent.Executors
 
 class QRCamera {
@@ -185,8 +185,8 @@ class QRCamera {
     @androidx.compose.ui.tooling.preview.Preview
     @Composable
     private fun CameraPreviewView_Preview() {
-        NumSumAppTheme {
-            NumSumAppBackground {
+        AppTheme {
+            AppBackground {
                 CameraPreviewView(
                     isPreviewing = true,
                     onBarcodeScanned = {},

@@ -5,24 +5,24 @@ import android.view.View
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.StarHalf
 import androidx.compose.material.icons.filled.StarRate
 import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.carousel.HorizontalUncontainedCarousel
-import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -33,10 +33,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import coil.compose.AsyncImagePainter.State.Empty.painter
 import coil.compose.rememberAsyncImagePainter
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdLoader
@@ -47,8 +47,8 @@ import com.google.android.gms.ads.nativead.NativeAdOptions
 import com.google.android.gms.ads.nativead.NativeAdOptions.ADCHOICES_TOP_RIGHT
 import com.google.android.gms.ads.nativead.NativeAdView
 import com.yangian.numsum.core.designsystem.R
-import com.yangian.numsum.core.designsystem.component.NumSumAppBackground
-import com.yangian.numsum.core.designsystem.theme.NumSumAppTheme
+import com.yangian.numsum.core.designsystem.component.AppBackground
+import com.yangian.numsum.core.designsystem.theme.AppTheme
 
 @Composable
 private fun LoadAdContent(
@@ -59,95 +59,84 @@ private fun LoadAdContent(
     nativeAd?.let { ad ->
 
         Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp),
             modifier = modifier
                 .background(
                     MaterialTheme.colorScheme.surfaceContainer,
                     MaterialTheme.shapes.large
                 )
+                .fillMaxSize()
         ) {
             if (ad.images.size > 0) {
 
-                Image(
-                    painter = rememberAsyncImagePainter(model = ad.images[0].drawable),
-                    contentDescription = "",
-                    contentScale = ContentScale.FillWidth,
-                    modifier = Modifier
-                        .fillMaxWidth()
+                Box(
+                    contentAlignment = Alignment.TopStart,
+                    modifier = Modifier.fillMaxWidth()
+                        .fillMaxHeight(0.7f)
                         .clip(MaterialTheme.shapes.large)
+                ) {
+                    Image(
+                        painter = rememberAsyncImagePainter(model = ad.images[0].drawable),
+                        contentDescription = "",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                    )
+                    Image(
+                        painter = painterResource(R.drawable.ad_badge),
+                        contentDescription = "Ad badge",
+                        modifier = Modifier
+                            .size(24.dp)
+                    )
+                }
+            }
+
+            Text(
+                text = "${ad.headline}",
+                style = MaterialTheme.typography.titleLarge,
+                maxLines = 1,
+            )
+
+            ad.body?.let { body ->
+                Text(
+                    text = body,
+                    maxLines = 1,
                 )
             }
 
             Row {
+                Spacer(
+                    modifier.weight(1f)
+                )
+
                 ad.icon?.let { icon ->
                     Image(
                         painter = rememberAsyncImagePainter(model = icon.drawable),
                         contentDescription = ad.advertiser,
                         contentScale = ContentScale.FillWidth,
                         modifier = Modifier
-                            .fillMaxWidth(0.2f)
+                            .height(40.dp)
                             .aspectRatio(1f, false)
                     )
 
                     Spacer(
-                        modifier = Modifier.fillMaxWidth(0.04f)
+                        modifier.weight(1f)
                     )
+
                 }
 
-                Column(
-                    verticalArrangement = Arrangement.SpaceEvenly,
+                Button(
+                    onClick = {
+                        composeView.performClick()
+                    },
                 ) {
                     Text(
-                        text = "${ad.headline}",
-                        style = MaterialTheme.typography.titleLarge,
+                        text = "${ad.callToAction}",
+                        style = MaterialTheme.typography.labelSmall,
                     )
-
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Image(
-                            painter = painterResource(R.drawable.ad_badge),
-                            contentDescription = "Ad badge",
-                            modifier = Modifier
-                                .size(24.dp)
-                        )
-
-                        if (ad.starRating != null) {
-                            StarRating(
-                                rating = ad.starRating!!,
-                                modifier = Modifier.wrapContentSize()
-                            )
-                        } else {
-                            Text(
-                                text = ad.store ?: ad.advertiser ?: "",
-                                color = MaterialTheme.colorScheme.onSurface,
-                                style = MaterialTheme.typography.titleSmall,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                        }
-                    }
                 }
-            }
 
-            ad.body?.let { body ->
-                Text(
-                    text = body,
-                    maxLines = 2,
-                )
-            }
-
-            Button(
-                onClick = {
-                    composeView.performClick()
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
-                Text(
-                    text = "${ad.callToAction}",
-                    style = MaterialTheme.typography.labelSmall,
+                Spacer(
+                    modifier.weight(1f)
                 )
             }
         }
@@ -252,8 +241,8 @@ fun StarRating(
 @Preview(device = "id:Nexus S")
 @Composable
 private fun StarRatingPreview() {
-    NumSumAppTheme {
-        NumSumAppBackground {
+    AppTheme {
+        AppBackground {
             StarRating(3.2, 5)
         }
     }

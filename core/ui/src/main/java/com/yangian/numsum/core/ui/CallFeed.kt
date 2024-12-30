@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.yangian.numsum.core.designsystem.theme.NumSumAppTheme
+import com.yangian.numsum.core.designsystem.theme.AppTheme
 import com.yangian.numsum.core.model.CallResource
 
 fun LazyListScope.callFeed(
@@ -50,7 +50,7 @@ sealed interface CallFeedUiState {
 @Preview
 @Composable
 private fun LoadingCallFeedPreview() {
-    NumSumAppTheme {
+    AppTheme {
         LazyColumn(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth(),

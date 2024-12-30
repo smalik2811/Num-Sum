@@ -25,7 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.Wallpapers
 import androidx.compose.ui.unit.dp
 import com.yangian.numsum.core.designsystem.icon.BackspaceIcon
-import com.yangian.numsum.core.designsystem.theme.NumSumAppTheme
+import com.yangian.numsum.core.designsystem.theme.AppTheme
 
 @Composable
 fun CalculatorButton(
@@ -86,7 +86,7 @@ fun CalculatorIconButton(
 )
 @Composable
 private fun CalculatorButtonPreview() {
-    NumSumAppTheme {
+    AppTheme {
         Surface(
             color = MaterialTheme.colorScheme.background,
         ) {
@@ -144,7 +144,7 @@ private fun CalculatorButtonPreview() {
 )
 @Composable
 private fun CalculatorIconButtonPreview() {
-    NumSumAppTheme {
+    AppTheme {
         Surface(
             color = MaterialTheme.colorScheme.background,
         ) {

@@ -15,8 +15,8 @@ import androidx.compose.ui.tooling.preview.Wallpapers
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.yangian.numsum.core.designsystem.component.NumSumAppBackground
-import com.yangian.numsum.core.designsystem.theme.NumSumAppTheme
+import com.yangian.numsum.core.designsystem.component.AppBackground
+import com.yangian.numsum.core.designsystem.theme.AppTheme
 import com.yangian.numsum.feature.home.HomeViewModel
 
 @Composable
@@ -68,8 +68,8 @@ fun HomeScreen(
 @Preview(wallpaper = Wallpapers.GREEN_DOMINATED_EXAMPLE, device = "id:pixel_8_pro")
 @Composable
 private fun CallLogsDisplayPreview() {
-    NumSumAppTheme {
-        NumSumAppBackground {
+    AppTheme {
+        AppBackground {
             CustomHomeScreen(
                 isMenuVisible = false,
                 isSignOutDialogVisible = false,

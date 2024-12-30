@@ -13,10 +13,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.yangian.numsum.core.designsystem.theme.LocalBackgroundTheme
-import com.yangian.numsum.core.designsystem.theme.NumSumAppTheme
+import com.yangian.numsum.core.designsystem.theme.AppTheme
 
 @Composable
-fun NumSumAppBackground(
+fun AppBackground(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
@@ -39,16 +39,16 @@ annotation class ThemePreviews
 
 @ThemePreviews
 @Composable
-fun BackgroundDefault() {
-    NumSumAppTheme(useDynamicColors = true) {
-        NumSumAppBackground(Modifier.size(100.dp), content = {})
+private fun BackgroundDefault() {
+    AppTheme(useDynamicColors = false) {
+        AppBackground(Modifier.size(100.dp), content = {})
     }
 }
 
 @ThemePreviews
 @Composable
-fun BackgroundDynamic() {
-    NumSumAppTheme(useDynamicColors = false) {
-        NumSumAppBackground(Modifier.size(100.dp), content = {})
+private fun BackgroundDynamic() {
+    AppTheme(useDynamicColors = true) {
+        AppBackground(Modifier.size(100.dp), content = {})
     }
 }
