@@ -43,10 +43,10 @@ Start syncing your call history securely with Num Sum and experience seamless cr
 ### External Libraries Used:
 
 - **Third-Party Libraries**
-  - [MarkdownText - Jetpack Compose](com.github.jeziellago:compose-markdown)
-  - [OkHttp](com.squareup.okhttp3:okhttp)
-  - [QRCode-Kotlin](io.github.g0dkar:qrcode-kotlin)
-  - [Retrofit](com.squareup.retrofit2:retrofit)
+  - [MarkdownText - Jetpack Compose](https://github.com/jeziellago/compose-markdown)
+  - [OkHttp](https://square.github.io/okhttp/)
+  - [QRCode-Kotlin](https://github.com/g0dkar/qrcode-kotlin)
+  - [Retrofit](https://github.com/square/retrofitt)
   - [Dagger-Hilt](https://dagger.dev/hilt/)
   - [Google ML Kit](https://developers.google.com/ml-kit)
   - [Firebase](https://firebase.google.com/)
